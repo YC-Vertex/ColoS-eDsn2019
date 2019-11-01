@@ -1,0 +1,8 @@
+MDK-ARM/eDsnProject_2019/
+*.crf
+*.d
+*.o
+
+*.hex
+*.swp
+*.vertex
