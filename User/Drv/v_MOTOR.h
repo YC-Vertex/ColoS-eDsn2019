@@ -31,6 +31,7 @@ typedef struct {
 
 void MotorInit(MOTOR_InstType * mInst);
 void MotorSetSpeed(MOTOR_InstType * mInst, float spd);
+void MotorOutput(MOTOR_InstType * mInst);
 
 void MotorSpdHandler(MOTOR_InstType * mInst, uint32_t clkFreq, _Bool isOutput);
 void MotorPidHandler(MOTOR_InstType * mInst, float time);

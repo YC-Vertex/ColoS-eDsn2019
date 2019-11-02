@@ -1,8 +1,9 @@
-#include "v_i2c.h"
+#include "v_softwarei2c.h"
 
 // periph layer
 
 void SDA_OUT() {
+  HAL_GPIO_DeInit(GPIOA, SDA_Pin);
   GPIO_InitTypeDef GPIO_InitStruct = {0};
 
   HAL_GPIO_WritePin(GPIOx, SDA_Pin, GPIO_PIN_RESET);
@@ -17,6 +18,7 @@ void SDA_OUT() {
 }
 
 void SDA_IN() {
+  HAL_GPIO_DeInit(GPIOA, SDA_Pin);
   GPIO_InitTypeDef GPIO_InitStruct = {0};
 
   GPIO_InitStruct.Pin = SDA_Pin;

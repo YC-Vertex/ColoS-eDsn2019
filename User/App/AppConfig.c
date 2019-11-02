@@ -1,5 +1,14 @@
 #include "AppConfig.h"
 
+uint8_t uart3RxBuf[100];
+float angle[3];
+
+DMA_InstType dma = {
+  "uart3", &huart3, &hdma_usart3_rx,
+  uart3RxBuf,
+  100, 0, 0
+};
+
 MOTOR_InstType motor[4] = {
   {
     "FrontLeft",
@@ -7,8 +16,8 @@ MOTOR_InstType motor[4] = {
     MTR1_CTR0_GPIO_Port, MTR1_CTR0_Pin, MTR1_CTR1_GPIO_Port, MTR1_CTR1_Pin,
     0, 0, 0, 0,         // lastUpdata, thisU, lastValue, thisV
     0, 0, 0, 0, 0,      // dir, encRps, motorRps, speed, targetSpd
-    52.0, 30.0, 56.0 * 3.1415926,               // ppr, sdr, perim
-    0.35, 0, 0.03,      // kp, ki, kd
+    52.0, 30.0, 58.0 * 3.1415926,               // ppr, sdr, perim
+    0.8, 0.2, 0.08,      // kp, ki, kd
     0, 0, 0, 0          // prvE, curE, sumE, pidval
   }, {
     "FrontRight",
@@ -16,8 +25,8 @@ MOTOR_InstType motor[4] = {
     MTR2_CTR0_GPIO_Port, MTR2_CTR0_Pin, MTR2_CTR1_GPIO_Port, MTR2_CTR1_Pin,
     0, 0, 0, 0, 
     0, 0, 0, 0, 0,
-    52.0, 30.0, 56.0 * 3.1415926,
-    0.35, 0, 0.03,
+    52.0, 30.0, 58.0 * 3.1415926,
+    0.8, 0.2, 0.08,      // kp, ki, kd
     0, 0, 0, 0
   }, {
     "RearLeft",
@@ -25,8 +34,8 @@ MOTOR_InstType motor[4] = {
     MTR3_CTR0_GPIO_Port, MTR3_CTR0_Pin, MTR3_CTR1_GPIO_Port, MTR3_CTR1_Pin,
     0, 0, 0, 0, 
     0, 0, 0, 0, 0,
-    52.0, 30.0, 56.0 * 3.1415926,
-    0.35, 0, 0.03,
+    52.0, 30.0, 58.0 * 3.1415926,
+    0.8, 0.8, 0.08,      // kp, ki, kd
     0, 0, 0, 0
   }, {
     "RearRight",
@@ -34,8 +43,8 @@ MOTOR_InstType motor[4] = {
     MTR4_CTR0_GPIO_Port, MTR4_CTR0_Pin, MTR4_CTR1_GPIO_Port, MTR4_CTR1_Pin,
     0, 0, 0, 0, 
     0, 0, 0, 0, 0,
-    52.0, 30.0, 56.0 * 3.1415926,
-    0.35, 0, 0.03,
+    52.0, 30.0, 58.0 * 3.1415926,
+    0.8, 0.2, 0.08,      // kp, ki, kd
     0, 0, 0, 0
   }
 };

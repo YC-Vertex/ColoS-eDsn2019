@@ -2,7 +2,7 @@
 #define _V_MPU6050__H_
 
 #include "main.h"
-#include "v_i2c.h"
+#include "v_softwarei2c.h"
 
 #define DEV_ADDR 0x68
 

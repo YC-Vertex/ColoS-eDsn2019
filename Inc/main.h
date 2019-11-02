@@ -33,7 +33,9 @@ extern "C" {
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "stdio.h"
+#include "string.h"
 #include "cmsis_os.h"
+#include "dma.h"
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
@@ -96,6 +98,10 @@ void DelayMs(uint16_t nms);
 #define MTR1_ENC0_GPIO_Port GPIOE
 #define MTR1_ENC1_Pin GPIO_PIN_11
 #define MTR1_ENC1_GPIO_Port GPIOE
+#define BOARD_TX_Pin GPIO_PIN_10
+#define BOARD_TX_GPIO_Port GPIOB
+#define BOARD_RX_Pin GPIO_PIN_11
+#define BOARD_RX_GPIO_Port GPIOB
 #define MTR3_ENC0_Pin GPIO_PIN_12
 #define MTR3_ENC0_GPIO_Port GPIOD
 #define MTR3_ENC1_Pin GPIO_PIN_13

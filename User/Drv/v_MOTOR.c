@@ -9,6 +9,20 @@ void MotorInit(MOTOR_InstType * mInst) {
 
 void MotorSetSpeed(MOTOR_InstType * mInst, float spd) {
   mInst->targetSpd = spd;
+  mInst->sumE = 0;
+  mInst->prvE = mInst->targetSpd - mInst->speed;
+}
+
+void MotorOutput(MOTOR_InstType * mInst) {
+  if (mInst->pidval > 0) {
+    HAL_GPIO_WritePin(mInst->ctr0Port, mInst->ctr0Pin, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(mInst->ctr1Port, mInst->ctr1Pin, GPIO_PIN_SET);
+    __HAL_TIM_SET_COMPARE(mInst->pwmTim, mInst->pwmChannel, mInst->pidval);
+  } else {
+    HAL_GPIO_WritePin(mInst->ctr0Port, mInst->ctr0Pin, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(mInst->ctr1Port, mInst->ctr1Pin, GPIO_PIN_RESET);
+    __HAL_TIM_SET_COMPARE(mInst->pwmTim, mInst->pwmChannel, -mInst->pidval);
+  }
 }
 
 
@@ -34,19 +48,11 @@ void MotorSpdHandler(MOTOR_InstType * mInst, uint32_t clkFreq, _Bool isOutput) {
   mInst->motorRps = mInst->encRps / mInst->sdr;
   mInst->speed = mInst->motorRps * mInst->perim;
   
-  MotorPidHandler(mInst, 1.0 * time / clkFreq);
   printf("%s\t%d\t%f\t%f\r\n", mInst->name, time, mInst->speed, mInst->pidval);
+  MotorPidHandler(mInst, 1.0 * time / clkFreq);
   
   if (isOutput == 1) {
-    if (mInst->pidval > 0) {
-      HAL_GPIO_WritePin(mInst->ctr0Port, mInst->ctr0Pin, GPIO_PIN_RESET);
-      HAL_GPIO_WritePin(mInst->ctr1Port, mInst->ctr1Pin, GPIO_PIN_SET);
-      __HAL_TIM_SET_COMPARE(mInst->pwmTim, mInst->pwmChannel, mInst->pidval);
-    } else {
-      HAL_GPIO_WritePin(mInst->ctr0Port, mInst->ctr0Pin, GPIO_PIN_SET);
-      HAL_GPIO_WritePin(mInst->ctr1Port, mInst->ctr1Pin, GPIO_PIN_RESET);
-      __HAL_TIM_SET_COMPARE(mInst->pwmTim, mInst->pwmChannel, -mInst->pidval);
-    }
+    MotorOutput(mInst);
   }
   
   mInst->lastUpdate = mInst->thisUpdate;
@@ -60,6 +66,7 @@ void MotorPidHandler(MOTOR_InstType * mInst, float time) {
   else if (mInst->sumE < -1e4) mInst->sumE = -1e4;
   
   mInst->pidval += mInst->kp * mInst->curE + mInst->kd * (mInst->curE - mInst->prvE) / time + mInst->ki * mInst->sumE;
+  // printf("\t%f\t%f\t%f\r\n", mInst->kp * mInst->curE , mInst->sumE * mInst->ki , mInst->kd * (mInst->curE - mInst->prvE) / time);
   if (mInst->pidval > 1000) mInst->pidval = 1000;
   if (mInst->pidval < -1000) mInst->pidval = -1000;
   
