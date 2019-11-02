@@ -28,10 +28,10 @@ void LocateTaskDaemon(void const * argument) {
     
     speedHandler(&Vehicle,motor,1.f * dt / 1000000);
     moveHandler(&Vehicle,motor,1.f * dt / 1000000);
-    setSpeed(motor,Vehicle.xSetSpeed,Vehicle.ySetSpeed);
+    setSpeed(motor,Vehicle.xSetSpeed,Vehicle.ySetSpeed,Vehicle.zSetSpeed);
     
     #ifdef __DEBUG__ 
-      printf("Position:\t%6.3f\t%6.3f\t%6.3f\t%6.3f\t%6.3f\t%6.3f\r\n",Vehicle.deltaX,Vehicle.deltaY,Vehicle.xSpeed , Vehicle.ySpeed,Vehicle.xSetSpeed , Vehicle.ySetSpeed);
+      printf("Position:\t%6.3f\t%6.3f\t%6.3f\t%6.3f\t%6.3f\t%6.3f\t%6.3f\t%6.3f\t%6.3f\r\n",Vehicle.deltaX,Vehicle.deltaY,Vehicle.deltaZ,Vehicle.xSpeed , Vehicle.ySpeed,Vehicle.zSpeed, Vehicle.xSetSpeed , Vehicle.ySetSpeed,Vehicle.zSetSpeed);
     #endif
     lastTime=thisTime;
   }
@@ -71,9 +71,6 @@ void EncoderTaskDaemon(void const * argument) {
         if(ABS(motor[i].speed) <= speedEps) motor[i].haltCounter++;
         if(motor[i].haltCounter>haltThreshold)MotorHalt(motor + i);
       }
-    
-      
-      
     osDelay(25-13);
   }
 }
