@@ -6,8 +6,6 @@
 #include "v_usartdma.h"
 #include "v_MOTION.h"
 #include "v_MPU6050.h"
-#define PI 3.1415926
-#define ABS(x) ((x) > 0 ? (x) : (-(x)) )
 
 
 extern const float speedEps;

@@ -12,7 +12,7 @@ DMA_InstType dma = {
 
 Position_InstType Vehicle = {
   0.f,0.f,    //delta
-  1.f,1.05f,  //Mutiple
+  1.f,1.1f,  //Mutiple
   0,0,        //target
   0.f,0.f,    //speed
   0.f,0.f,    //set speed

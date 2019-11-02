@@ -2,6 +2,7 @@
 #define _V_MOTOR__H_
 
 #include "main.h"
+
 extern const uint8_t haltThreshold;
 typedef struct {
   char * name;
