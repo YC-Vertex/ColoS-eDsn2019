@@ -3,6 +3,16 @@ Car "ColoS" of team Colossus Trio in eDsnCompetition 2019
 
 ---
 
+## 20191103 03:00 - wys & zyc:
+
+惯导基本写完了，在寝室地上调的参
+
+现在可以旋转跳跃托马斯大回环，来给整个活
+
+todo: 蓝牙、陀螺仪、上位机
+
+---
+
 ## 20191102 19:30 - zyc & wys:
 
 加入了惯导的代码（`Drv/v_MOTION.c/.h`），但是惯导的PID有一些锅

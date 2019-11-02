@@ -11,15 +11,15 @@ DMA_InstType dma = {
 };
 
 Position_InstType Vehicle = {
-  0.f,0.f, 0.f,   //delta
-  0.94f,0.84f,.2408f,  //Mutiple
-  0, 0, 0,       //target
-  0.f,0.f,0.f,    //speed XYZ
-  0.f,0.f,0.f,    //set speed
-  8.f,8.f,10.f,    //kp
-  0.8f,0.8f,1.f,    //kd
-  0.f,0.f,0.f,    //curE
-  0.f,0.f,0.f     //prvE
+  0.f,  0.f,  0.f,    //delta
+  .98f, .84f, .286f,  //Mutiple
+  0,    0,    0,      //target
+  0.f,  0.f,  0.f,    //speed XYZ
+  0.f,  0.f,  0.f,    //set speed
+  8.f,  8.f,  20.f,   //kp
+  1.f,  1.f,  2.5f,   //kd
+  0.f,  0.f,  0.f,    //curE
+  0.f,  0.f,  0.f     //prvE
 };
 
 MOTOR_InstType motor[4] = {
@@ -29,7 +29,7 @@ MOTOR_InstType motor[4] = {
     MTR1_CTR0_GPIO_Port, MTR1_CTR0_Pin, MTR1_CTR1_GPIO_Port, MTR1_CTR1_Pin,
     0, 0, 0, 0,            // lastUpdata, thisU, lastValue, thisV
     0, 0, 0, 0, 0,         // dir, encRps, motorRps, speed, targetSpd
-    52.0, 30.0, 76.0 * PI, // ppr, sdr, perim
+    52.0, 30.0, 60.0 * PI, // ppr, sdr, perim
     0.8, 0.2, 0.08,        // kp, ki, kd
     0, 0, 0, 0, 0, 0       // prvE, curE, sumE, pidval atWork HaltCounter 
   }, {
@@ -38,7 +38,7 @@ MOTOR_InstType motor[4] = {
     MTR2_CTR0_GPIO_Port, MTR2_CTR0_Pin, MTR2_CTR1_GPIO_Port, MTR2_CTR1_Pin,
     0, 0, 0, 0, 
     0, 0, 0, 0, 0,
-    52.0, 30.0, 76.0 * PI,
+    52.0, 30.0, 60.0 * PI,
     0.8, 0.2, 0.08,      
     0, 0, 0, 0, 0, 0
   }, {
@@ -47,8 +47,8 @@ MOTOR_InstType motor[4] = {
     MTR3_CTR0_GPIO_Port, MTR3_CTR0_Pin, MTR3_CTR1_GPIO_Port, MTR3_CTR1_Pin,
     0, 0, 0, 0, 
     0, 0, 0, 0, 0,
-    52.0, 30.0, 76.0 * PI,
-    0.8, 0.8, 0.08,    
+    52.0, 30.0, 60.0 * PI,
+    0.8, 0.2, 0.08,    
     0, 0, 0, 0, 0, 0
   }, {
     "RearRight",
