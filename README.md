@@ -3,6 +3,14 @@ Car "ColoS" of team Colossus Trio in eDsnCompetition 2019
 
 ---
 
+## 20191102 19:30 - zyc & wys:
+
+加入了惯导的代码（`Drv/v_MOTION.c/.h`），但是惯导的PID有一些锅
+
+稍微修改之后是完整可用版本
+
+---
+
 ## 20191101 14:30 - zyc:
 
 ### init

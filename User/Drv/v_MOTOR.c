@@ -1,15 +1,21 @@
 #include "v_MOTOR.h"
-
+const uint8_t haltThreshold=10;
 void MotorInit(MOTOR_InstType * mInst) {
   mInst->targetSpd = 0;
   mInst->lastUpdate = __HAL_TIM_GET_COUNTER(mInst->timeTim);
   mInst->lastValue = __HAL_TIM_GET_COUNTER(mInst->encTim);
   __HAL_TIM_SET_COMPARE(mInst->pwmTim, mInst->pwmChannel, 0);
 }
-
+void MotorHalt(MOTOR_InstType * mInst) {
+  mInst->pidval = 0;
+  mInst->sumE = 0;
+  mInst->atWork = 0;
+  MotorOutput(mInst);
+}
 void MotorSetSpeed(MOTOR_InstType * mInst, float spd) {
   mInst->targetSpd = spd;
   mInst->sumE = 0;
+  mInst->atWork = 1;
   mInst->prvE = mInst->targetSpd - mInst->speed;
 }
 
@@ -47,8 +53,9 @@ void MotorSpdHandler(MOTOR_InstType * mInst, uint32_t clkFreq, _Bool isOutput) {
   mInst->encRps = mInst->dir ? mInst->encRps : -mInst->encRps;
   mInst->motorRps = mInst->encRps / mInst->sdr;
   mInst->speed = mInst->motorRps * mInst->perim;
-  
+  #ifdef __DEBUG__
   printf("%s\t%d\t%f\t%f\r\n", mInst->name, time, mInst->speed, mInst->pidval);
+  #endif
   MotorPidHandler(mInst, 1.0 * time / clkFreq);
   
   if (isOutput == 1) {
@@ -68,7 +75,8 @@ void MotorPidHandler(MOTOR_InstType * mInst, float time) {
   mInst->pidval += mInst->kp * mInst->curE + mInst->kd * (mInst->curE - mInst->prvE) / time + mInst->ki * mInst->sumE;
   // printf("\t%f\t%f\t%f\r\n", mInst->kp * mInst->curE , mInst->sumE * mInst->ki , mInst->kd * (mInst->curE - mInst->prvE) / time);
   if (mInst->pidval > 1000) mInst->pidval = 1000;
-  if (mInst->pidval < -1000) mInst->pidval = -1000;
+  else if (mInst->pidval > 1000) mInst->pidval = 1000;
+  else if (mInst->pidval < 50&&mInst->pidval > -50) mInst->pidval = 0;
   
   mInst->prvE = mInst->curE;
 }

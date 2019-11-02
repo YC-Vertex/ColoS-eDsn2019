@@ -2,7 +2,7 @@
 #define _V_MOTOR__H_
 
 #include "main.h"
-
+extern const uint8_t haltThreshold;
 typedef struct {
   char * name;
   
@@ -27,12 +27,14 @@ typedef struct {
   float kp, ki, kd;
   float curE, prvE, sumE;
   float pidval;
+  uint8_t atWork;
+  uint8_t haltCounter;
 } MOTOR_InstType;
 
 void MotorInit(MOTOR_InstType * mInst);
 void MotorSetSpeed(MOTOR_InstType * mInst, float spd);
 void MotorOutput(MOTOR_InstType * mInst);
-
+void MotorHalt(MOTOR_InstType * mInst);
 void MotorSpdHandler(MOTOR_InstType * mInst, uint32_t clkFreq, _Bool isOutput);
 void MotorPidHandler(MOTOR_InstType * mInst, float time);
 

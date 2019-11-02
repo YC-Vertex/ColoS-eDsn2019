@@ -51,6 +51,7 @@
 osThreadId MainTaskHandle;
 osThreadId SensorTaskHandle;
 osThreadId EncoderTaskHandle;
+osThreadId LocateTaskHandle;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -60,6 +61,7 @@ osThreadId EncoderTaskHandle;
 void MainTaskDaemon(void const * argument);
 void SensorTaskDaemon(void const * argument);
 void EncoderTaskDaemon(void const * argument);
+void LocateTaskDaemon(void const * argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -115,8 +117,12 @@ void MX_FREERTOS_Init(void) {
   SensorTaskHandle = osThreadCreate(osThread(SensorTask), NULL);
 
   /* definition and creation of EncoderTask */
-  osThreadDef(EncoderTask, EncoderTaskDaemon, osPriorityRealtime, 0, 128);
+  osThreadDef(EncoderTask, EncoderTaskDaemon, osPriorityHigh, 0, 128);
   EncoderTaskHandle = osThreadCreate(osThread(EncoderTask), NULL);
+
+  /* definition and creation of LocateTask */
+  osThreadDef(LocateTask, LocateTaskDaemon, osPriorityHigh, 0, 128);
+  LocateTaskHandle = osThreadCreate(osThread(LocateTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -177,6 +183,24 @@ __weak void EncoderTaskDaemon(void const * argument)
     osDelay(1);
   }
   /* USER CODE END EncoderTaskDaemon */
+}
+
+/* USER CODE BEGIN Header_LocateTaskDaemon */
+/**
+* @brief Function implementing the LocateTask thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_LocateTaskDaemon */
+__weak void LocateTaskDaemon(void const * argument)
+{
+  /* USER CODE BEGIN LocateTaskDaemon */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END LocateTaskDaemon */
 }
 
 /* Private application code --------------------------------------------------*/

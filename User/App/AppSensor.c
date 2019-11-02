@@ -1,5 +1,6 @@
 #include "main.h"
 #include "AppConfig.h"
+#define __DEBUG__
 
 void SensorTaskDaemon(void const * argument) {
   DmaInit(&dma);
@@ -7,18 +8,32 @@ void SensorTaskDaemon(void const * argument) {
   
   while (1) {
     /*
-    // MpuDataHandler(&mpu, 1000000);
-    printf("mpu: %d\r\n", I2cReadRegister(DEV_ADDR, WHO_AM_I));
-    printf("Hello World - SensorTaskDaemon\r\n");
-    // osDelay(20);
-    osDelay(1000);
-    */
     if (DmaRecv(&dma)) {
-      sscanf(dma.rxBuf, "x: %f\ty: %f\tz: %f\r\n", angle + 0, angle + 1, angle + 2);
-      printf("xAngle: %f\tyAngle: %f\tzAngle: %f\r\n", angle[0], angle[1], angle[2]);
+      sscanf(dma.rxBuf, "x: %f\ty: %f\tz: %f\r\n", &mpu.xAngle, &mpu.yAngle, &mpu.zAngle);
       DmaClearBuf(&dma);
+      printf("xAngle: %f\tyAngle: %f\tzAngle: %f\r\n", mpu.xAngle, mpu.yAngle, mpu.zAngle);
     }
     osDelay(20-13);
+    */
+    osDelay(1000);
+  }
+}
+
+void LocateTaskDaemon(void const * argument) {
+ ;
+  for( uint16_t thisTime,lastTime = __HAL_TIM_GET_COUNTER(&htim6);;osDelay(1)){
+    thisTime=__HAL_TIM_GET_COUNTER(&htim6);
+    int dt = (int)thisTime  - (int)lastTime;
+    dt = dt >= 0 ? dt : 0x10000 + dt;
+    
+    speedHandler(&Vehicle,motor,1.f * dt / 1000000);
+    moveHandler(&Vehicle,motor,1.f * dt / 1000000);
+    setSpeed(motor,Vehicle.xSetSpeed,Vehicle.ySetSpeed);
+    
+    #ifdef __DEBUG__ 
+      printf("Position:\t%6.3f\t%6.3f\t%6.3f\t%6.3f\t%6.3f\t%6.3f\r\n",Vehicle.deltaX,Vehicle.deltaY,Vehicle.xSpeed , Vehicle.ySpeed,Vehicle.xSetSpeed , Vehicle.ySetSpeed);
+    #endif
+    lastTime=thisTime;
   }
 }
 
@@ -28,7 +43,7 @@ void EncoderTaskDaemon(void const * argument) {
   MotorInit(motor + 2);
   MotorInit(motor + 3);
   
-  osDelay(1000);
+  osDelay(500);
   
   /*
   __HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_1, 800);
@@ -46,17 +61,19 @@ void EncoderTaskDaemon(void const * argument) {
   */
   
   while (1) {
-    MotorSpdHandler(motor + 0, 1000000, 0);
-    MotorSpdHandler(motor + 1, 1000000, 0);
-    MotorSpdHandler(motor + 2, 1000000, 0);
-    MotorSpdHandler(motor + 3, 1000000, 0);
-    /*
-    MotorOutput(motor + 0);
-    MotorOutput(motor + 1);
-    MotorOutput(motor + 2);
-    MotorOutput(motor + 3);
+    for(uint8_t i=0;i<4;i++)
+      MotorSpdHandler(motor + i, 1000000, 0);
+    for(uint8_t i=0;i<4;i++)
+      if(motor[i].atWork)
+        MotorOutput(motor + i);
+    for(uint8_t i=0;i<4;i++)
+      if(motor[i].atWork&&ABS(motor[i].targetSpd)<1e-2){
+        if(ABS(motor[i].speed) <= speedEps) motor[i].haltCounter++;
+        if(motor[i].haltCounter>haltThreshold)MotorHalt(motor + i);
+      }
+    
+      
+      
     osDelay(25-13);
-    */
-    osDelay(100000);
   }
 }
