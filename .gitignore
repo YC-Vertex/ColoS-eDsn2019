@@ -3,6 +3,11 @@ MDK-ARM/eDsnProject_2019/
 *.d
 *.o
 
+*.DXF
+*.SLDPRT
+*.png
+*.jpg
+
 *.hex
 *.swp
 *.vertex
