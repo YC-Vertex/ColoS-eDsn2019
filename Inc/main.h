@@ -54,6 +54,9 @@ extern "C" {
 
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
+// #define __DEBUG_1__ // common debug info
+// #define __DEBUG_2__ // detail debug info
+#define __TEMP__
 #define ABS(x) ((x) > 0 ? (x) : (-(x)))
 /* USER CODE END EM */
 
@@ -95,14 +98,16 @@ void DelayMs(uint16_t nms);
 #define MTR2_ENC0_GPIO_Port GPIOA
 #define MTR2_ENC1_Pin GPIO_PIN_7
 #define MTR2_ENC1_GPIO_Port GPIOA
+#define GREEN_Pin GPIO_PIN_1
+#define GREEN_GPIO_Port GPIOG
 #define MTR1_ENC0_Pin GPIO_PIN_9
 #define MTR1_ENC0_GPIO_Port GPIOE
 #define MTR1_ENC1_Pin GPIO_PIN_11
 #define MTR1_ENC1_GPIO_Port GPIOE
-#define BOARD_TX_Pin GPIO_PIN_10
-#define BOARD_TX_GPIO_Port GPIOB
-#define BOARD_RX_Pin GPIO_PIN_11
-#define BOARD_RX_GPIO_Port GPIOB
+#define COMM_TX_Pin GPIO_PIN_10
+#define COMM_TX_GPIO_Port GPIOB
+#define COMM_RX_Pin GPIO_PIN_11
+#define COMM_RX_GPIO_Port GPIOB
 #define MTR3_ENC0_Pin GPIO_PIN_12
 #define MTR3_ENC0_GPIO_Port GPIOD
 #define MTR3_ENC1_Pin GPIO_PIN_13
@@ -129,6 +134,18 @@ void DelayMs(uint16_t nms);
 #define MPU6050_SCL_GPIO_Port GPIOA
 #define MPU6050_SDA_Pin GPIO_PIN_11
 #define MPU6050_SDA_GPIO_Port GPIOA
+#define MONITOR_TX_Pin GPIO_PIN_12
+#define MONITOR_TX_GPIO_Port GPIOC
+#define MONITOR_RX_Pin GPIO_PIN_2
+#define MONITOR_RX_GPIO_Port GPIOD
+#define PIN1_Pin GPIO_PIN_4
+#define PIN1_GPIO_Port GPIOB
+#define PIN2_Pin GPIO_PIN_5
+#define PIN2_GPIO_Port GPIOB
+#define PIN3_Pin GPIO_PIN_6
+#define PIN3_GPIO_Port GPIOB
+#define PIN4_Pin GPIO_PIN_7
+#define PIN4_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

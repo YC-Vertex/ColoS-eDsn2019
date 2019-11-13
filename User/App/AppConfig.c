@@ -1,13 +1,42 @@
 #include "AppConfig.h"
 
-uint8_t uart3RxBuf[100];
+uint8_t uart2RxBuf[256];
+uint8_t uart3RxBuf[256];
+uint8_t uart5RxBuf[256];
 
-const float speedEps=30;
+const float speedEps = 30;
 
-DMA_InstType dma = {
-  "uart3", &huart3, &hdma_usart3_rx,
+DMA_InstType debug = {
+  "debug(u2)", &huart2, &hdma_usart2_rx,
+  uart2RxBuf,
+  255, 0
+};
+
+DMA_InstType comm = {
+  "comm(u3)", &huart3, &hdma_usart3_rx,
   uart3RxBuf,
-  100, 0, 0
+  255, 0
+};
+
+DMA_InstType monitor = {
+  "mntr(u5)", &huart5, &hdma_uart5_rx,
+  uart5RxBuf,
+  255, 0
+};
+
+EDC21Global_InstType eGlobal = {
+  "EDC global",
+  0, NONE, {0, 0}, {0, 0}
+};
+
+EDC21Player_InstType ePlayer[2] = {
+  {
+    "player 1",
+    0, {0, 0}, 0, {0, 0, 0}, {0, 0, 0}
+  }, {
+    "player 2",
+    0, {0, 0}, 0, {0, 0, 0}, {0, 0, 0}
+  }
 };
 
 Position_InstType Vehicle = {

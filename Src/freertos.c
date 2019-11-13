@@ -52,6 +52,7 @@ osThreadId MainTaskHandle;
 osThreadId SensorTaskHandle;
 osThreadId EncoderTaskHandle;
 osThreadId LocateTaskHandle;
+osThreadId CommTaskHandle;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -62,6 +63,7 @@ void MainTaskDaemon(void const * argument);
 void SensorTaskDaemon(void const * argument);
 void EncoderTaskDaemon(void const * argument);
 void LocateTaskDaemon(void const * argument);
+void CommTaskDaemon(void const * argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -117,12 +119,16 @@ void MX_FREERTOS_Init(void) {
   SensorTaskHandle = osThreadCreate(osThread(SensorTask), NULL);
 
   /* definition and creation of EncoderTask */
-  osThreadDef(EncoderTask, EncoderTaskDaemon, osPriorityHigh, 0, 128);
+  osThreadDef(EncoderTask, EncoderTaskDaemon, osPriorityRealtime, 0, 128);
   EncoderTaskHandle = osThreadCreate(osThread(EncoderTask), NULL);
 
   /* definition and creation of LocateTask */
-  osThreadDef(LocateTask, LocateTaskDaemon, osPriorityHigh, 0, 128);
+  osThreadDef(LocateTask, LocateTaskDaemon, osPriorityRealtime, 0, 128);
   LocateTaskHandle = osThreadCreate(osThread(LocateTask), NULL);
+
+  /* definition and creation of CommTask */
+  osThreadDef(CommTask, CommTaskDaemon, osPriorityHigh, 0, 128);
+  CommTaskHandle = osThreadCreate(osThread(CommTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -201,6 +207,24 @@ __weak void LocateTaskDaemon(void const * argument)
     osDelay(1);
   }
   /* USER CODE END LocateTaskDaemon */
+}
+
+/* USER CODE BEGIN Header_CommTaskDaemon */
+/**
+* @brief Function implementing the CommTask thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_CommTaskDaemon */
+__weak void CommTaskDaemon(void const * argument)
+{
+  /* USER CODE BEGIN CommTaskDaemon */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END CommTaskDaemon */
 }
 
 /* Private application code --------------------------------------------------*/
