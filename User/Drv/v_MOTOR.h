@@ -19,7 +19,7 @@ typedef struct {
   uint32_t lastUpdate, thisUpdate;
   uint16_t lastValue, thisValue;
   
-  _Bool dir;
+  _Bool intDir, dir;
   float encRps, motorRps, speed;
   float targetSpd;
   

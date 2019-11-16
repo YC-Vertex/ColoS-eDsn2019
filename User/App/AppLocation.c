@@ -2,23 +2,24 @@
 #include "AppConfig.h"
 
 void LocateTaskDaemon(void const * argument) {
-  int count = 0;
+  uint8_t count = 0;
   
   for (uint16_t thisTime, lastTime = __HAL_TIM_GET_COUNTER(&htim6); ; osDelay(37)) {
     thisTime = __HAL_TIM_GET_COUNTER(&htim6);
     int dt = (int)thisTime  - (int)lastTime;
     dt = dt >= 0 ? dt : 0x10000 + dt;
+    speedHandler(&Vehicle, motor, &jy ,1.f * dt / 1000000);
+    if (navFlag) {
+      moveHandler(&Vehicle, motor, 1.f * dt / 1000000);
+      setSpeed(motor,&Vehicle, Vehicle.xSetSpeed, Vehicle.ySetSpeed, Vehicle.zSetSpeed);
+    }
     
-    speedHandler(&Vehicle, motor, 1.f * dt / 1000000);
-    moveHandler(&Vehicle, motor, 1.f * dt / 1000000);
-    setSpeed(motor, Vehicle.xSetSpeed, Vehicle.ySetSpeed, Vehicle.zSetSpeed);
-    
-    #ifdef __DEBUG_1__ 
-    if (count++ >= 100) {
-      printf("Position: %6.3f %6.3f %6.3f %6.3f %6.3f %6.3f %6.3f %6.3f %6.3f\r\n",
-          Vehicle.deltaX, Vehicle.deltaY, Vehicle.deltaZ, 
-          Vehicle.xSpeed, Vehicle.ySpeed, Vehicle.zSpeed,
-          Vehicle.xSetSpeed, Vehicle.ySetSpeed, Vehicle.zSetSpeed);
+    #ifdef __DEBUG_1__
+    if (count++ >= 80) {
+      printf("Position: %6.3f %6.3f %6.3f ", Vehicle.deltaX, Vehicle.deltaY, Vehicle.deltaZ);
+      printf("%6.3f %6.3f %6.3f ", Vehicle.xSpeed, Vehicle.ySpeed, Vehicle.zSpeed);
+      printf("%6.3f %6.3f %6.3f\r\n", Vehicle.xSetSpeed, Vehicle.ySetSpeed, Vehicle.zSetSpeed);
+      printf("jy: %6.3f %6.3f %6.3f\r\n", jy.pitch, jy.row, jy.yall);
       count = 0;
     }
     #endif

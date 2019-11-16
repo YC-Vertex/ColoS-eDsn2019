@@ -115,7 +115,7 @@ void MX_FREERTOS_Init(void) {
   MainTaskHandle = osThreadCreate(osThread(MainTask), NULL);
 
   /* definition and creation of SensorTask */
-  osThreadDef(SensorTask, SensorTaskDaemon, osPriorityAboveNormal, 0, 128);
+  osThreadDef(SensorTask, SensorTaskDaemon, osPriorityHigh, 0, 128);
   SensorTaskHandle = osThreadCreate(osThread(SensorTask), NULL);
 
   /* definition and creation of EncoderTask */
@@ -127,7 +127,7 @@ void MX_FREERTOS_Init(void) {
   LocateTaskHandle = osThreadCreate(osThread(LocateTask), NULL);
 
   /* definition and creation of CommTask */
-  osThreadDef(CommTask, CommTaskDaemon, osPriorityHigh, 0, 128);
+  osThreadDef(CommTask, CommTaskDaemon, osPriorityNormal, 0, 128);
   CommTaskHandle = osThreadCreate(osThread(CommTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */

@@ -1,8 +1,8 @@
 #include "v_EDC21.h"
 
-uint16_t rxBufPtr = 0;
-uint8_t rxBuf[128];
-_Bool isStart = 0;
+static uint16_t rxBufPtr = 0;
+static uint8_t rxBuf[128];
+static _Bool isStart = 0;
 
 _Bool Decode(uint8_t * data, EDC21Global_InstType * gb,
   EDC21Player_InstType * p1, EDC21Player_InstType * p2) {
@@ -73,8 +73,11 @@ void EDC21Handler(DMA_InstType * dma, EDC21Global_InstType * gb,
             printf("%x ", rxBuf[j]);
           printf("\r\n");
           #endif
-          memset(rxBuf, 0, sizeof(uint8_t) * 36);
+          memset(rxBuf, 0, 100);
           rxBufPtr = 0;
+        } else if (rxBufPtr == 128) {
+          memset(rxBuf, 0, 100);
+          isStart = 0;
         }
       } else {
         if (i != length-1 && tempBuf[i] == 0x0d && tempBuf[i+1] == 0x0a) {

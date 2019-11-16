@@ -3,6 +3,7 @@ MDK-ARM/eDsnProject_2019/
 *.d
 *.o
 
+0_Material/
 *.DXF
 *.SLDPRT
 *.png

@@ -36,7 +36,7 @@ void MotorOutput(MOTOR_InstType * mInst) {
 
 
 void MotorSpdHandler(MOTOR_InstType * mInst, uint32_t clkFreq, _Bool isOutput) {
-  uint32_t time;
+  uint16_t time;
   uint16_t value;
   
   mInst->thisUpdate = __HAL_TIM_GET_COUNTER(mInst->timeTim);
@@ -51,14 +51,17 @@ void MotorSpdHandler(MOTOR_InstType * mInst, uint32_t clkFreq, _Bool isOutput) {
   if (0xffff - time <= 6) time = 0;   // eliminate glitch (?)
   if (value >= mInst->ppr * mInst->sdr * 25) value = 0; // eliminate glitch (?)
   
+  if (!mInst->intDir) mInst->dir = !mInst->dir;
+  
   mInst->encRps = value / mInst->ppr * clkFreq / time;
   mInst->encRps = mInst->dir ? mInst->encRps : -mInst->encRps;
   mInst->motorRps = mInst->encRps / mInst->sdr;
   mInst->speed = mInst->motorRps * mInst->perim;
-  #ifdef __DEBUG_2__
-  printf("%s\t%d\t%f\t%f\r\n", mInst->name, time, mInst->speed, mInst->pidval);
-  #endif
   MotorPidHandler(mInst, 1.0 * time / clkFreq);
+  
+  #ifdef __DEBUG_2__
+  printf("%d\t%d\t%s\t%f\t%f\r\n", time, value, mInst->name, mInst->speed, mInst->pidval);
+  #endif
   
   if (isOutput == 1) {
     MotorOutput(mInst);
@@ -75,10 +78,10 @@ void MotorPidHandler(MOTOR_InstType * mInst, float time) {
   else if (mInst->sumE < -1e4) mInst->sumE = -1e4;
   
   mInst->pidval += mInst->kp * mInst->curE + mInst->kd * (mInst->curE - mInst->prvE) / time + mInst->ki * mInst->sumE;
-  // printf("\t%f\t%f\t%f\r\n", mInst->kp * mInst->curE , mInst->sumE * mInst->ki , mInst->kd * (mInst->curE - mInst->prvE) / time);
+  // printf("\t%f\t%f\t%f", mInst->kp * mInst->curE , mInst->sumE * mInst->ki , mInst->kd * (mInst->curE - mInst->prvE) / time);
   if (mInst->pidval > 1000) mInst->pidval = 1000;
   else if (mInst->pidval > 1000) mInst->pidval = 1000;
-  else if (mInst->pidval < 50 && mInst->pidval > -50) mInst->pidval = 0;
+  else if (mInst->pidval < 30 && mInst->pidval > -30) mInst->pidval = 0;
   
   mInst->prvE = mInst->curE;
 }

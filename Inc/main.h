@@ -54,7 +54,7 @@ extern "C" {
 
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
-// #define __DEBUG_1__ // common debug info
+#define __DEBUG_1__ // common debug info
 // #define __DEBUG_2__ // detail debug info
 #define __TEMP__
 #define ABS(x) ((x) > 0 ? (x) : (-(x)))
@@ -90,10 +90,10 @@ void DelayMs(uint16_t nms);
 #define MTR4_ENC0_GPIO_Port GPIOA
 #define MTR4_ENC1_Pin GPIO_PIN_1
 #define MTR4_ENC1_GPIO_Port GPIOA
-#define DEBUG_TX_Pin GPIO_PIN_2
-#define DEBUG_TX_GPIO_Port GPIOA
-#define DEBUG_RX_Pin GPIO_PIN_3
-#define DEBUG_RX_GPIO_Port GPIOA
+#define COMM_TX_Pin GPIO_PIN_2
+#define COMM_TX_GPIO_Port GPIOA
+#define COMM_RX_Pin GPIO_PIN_3
+#define COMM_RX_GPIO_Port GPIOA
 #define MTR2_ENC0_Pin GPIO_PIN_6
 #define MTR2_ENC0_GPIO_Port GPIOA
 #define MTR2_ENC1_Pin GPIO_PIN_7
@@ -104,10 +104,10 @@ void DelayMs(uint16_t nms);
 #define MTR1_ENC0_GPIO_Port GPIOE
 #define MTR1_ENC1_Pin GPIO_PIN_11
 #define MTR1_ENC1_GPIO_Port GPIOE
-#define COMM_TX_Pin GPIO_PIN_10
-#define COMM_TX_GPIO_Port GPIOB
-#define COMM_RX_Pin GPIO_PIN_11
-#define COMM_RX_GPIO_Port GPIOB
+#define DEBUG_TX_Pin GPIO_PIN_10
+#define DEBUG_TX_GPIO_Port GPIOB
+#define DEBUG_RX_Pin GPIO_PIN_11
+#define DEBUG_RX_GPIO_Port GPIOB
 #define MTR3_ENC0_Pin GPIO_PIN_12
 #define MTR3_ENC0_GPIO_Port GPIOD
 #define MTR3_ENC1_Pin GPIO_PIN_13
@@ -130,10 +130,10 @@ void DelayMs(uint16_t nms);
 #define MTR3_PWM_GPIO_Port GPIOC
 #define MTR4_PWM_Pin GPIO_PIN_9
 #define MTR4_PWM_GPIO_Port GPIOC
-#define MPU6050_SCL_Pin GPIO_PIN_10
-#define MPU6050_SCL_GPIO_Port GPIOA
-#define MPU6050_SDA_Pin GPIO_PIN_11
-#define MPU6050_SDA_GPIO_Port GPIOA
+#define JY61_TX_Pin GPIO_PIN_10
+#define JY61_TX_GPIO_Port GPIOC
+#define JY61_RX_Pin GPIO_PIN_11
+#define JY61_RX_GPIO_Port GPIOC
 #define MONITOR_TX_Pin GPIO_PIN_12
 #define MONITOR_TX_GPIO_Port GPIOC
 #define MONITOR_RX_Pin GPIO_PIN_2
