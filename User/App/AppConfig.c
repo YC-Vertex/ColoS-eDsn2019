@@ -51,6 +51,8 @@ EDC21Player_InstType ePlayer[2] = {
   }
 };
 
+EDC21Player_InstType *ePlayerPointer;
+
 Position_InstType Vehicle = {
   0.f,  0.f,  0.f,    //delta
   .98f, .84f, .35f,  //Mutiple
