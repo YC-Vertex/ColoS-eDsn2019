@@ -85,7 +85,7 @@ void CommTaskDaemon(void const * argument) {
     
     EDC21Handler(&monitor, &eGlobal, ePlayer + 0, ePlayer + 1);
     #ifdef __DEBUG_1__
-    if (count++ >= 50) {
+    if (count++ >= 20) {
       EdcDispGlobalInfo(&eGlobal);
       EdcDispPlayerInfo(ePlayer + 0);
       EdcDispPlayerInfo(ePlayer + 1);

@@ -443,6 +443,11 @@
               <FileType>1</FileType>
               <FilePath>..\User\Drv\v_EDC21.c</FilePath>
             </File>
+            <File>
+              <FileName>v_JY61.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\User\Drv\v_JY61.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
