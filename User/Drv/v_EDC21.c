@@ -30,6 +30,12 @@ _Bool Decode(uint8_t * data, EDC21Global_InstType * gb,
   gb->person[1].y = ((data[3] & 0x10)) << 4 | data[11];
   gb->ball.x = ((data[3] & 0x08)) << 5 | data[12];
   gb->ball.y = ((data[3] & 0x04)) << 6 | data[13];
+  gb->person[0].x *= 10;
+  gb->person[0].y *= 10;
+  gb->person[1].x *= 10;
+  gb->person[1].y *= 10;
+  gb->ball.x *= 10;
+  gb->ball.y *= 10;
 
   // player 1
   p1->isInLaby = (data[2] & 0x20) >> 5;
@@ -39,6 +45,8 @@ _Bool Decode(uint8_t * data, EDC21Global_InstType * gb,
   p1->count[0] = data[18];
   p1->count[1] = data[20];
   p1->count[2] = data[22];
+  p1->pos.x *= 10;
+  p1->pos.y *= 10;
 
   // player 2
   p2->isInLaby = (data[2] & 0x10) >> 4;
@@ -48,6 +56,8 @@ _Bool Decode(uint8_t * data, EDC21Global_InstType * gb,
   p2->count[0] = data[19];
   p2->count[1] = data[21];
   p2->count[2] = data[23];
+  p2->pos.x *= 10;
+  p2->pos.y *= 10;
   
   return 1;
 }
