@@ -84,7 +84,6 @@ void CommTaskDaemon(void const * argument) {
     }
     
     EDC21Handler(&monitor, &eGlobal, ePlayer + 0, ePlayer + 1);
-    /*
     #ifdef __DEBUG_1__
     if (count++ >= 50) {
       EdcDispGlobalInfo(&eGlobal);
@@ -93,7 +92,6 @@ void CommTaskDaemon(void const * argument) {
       count = 0;
     }
     #endif
-    */
     osDelay(80);
   }
 }
