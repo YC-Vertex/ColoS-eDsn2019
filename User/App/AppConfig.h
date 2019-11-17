@@ -26,6 +26,5 @@ extern EDC21Player_InstType ePlayer[2];
 extern MOTOR_InstType motor[4];
 extern JY61_InstType jy;
 extern Position_InstType Vehicle;
-extern EDC21Player_InstType *ePlayerPointer;
 
 #endif

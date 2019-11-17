@@ -12,7 +12,7 @@ uint8_t uart5RxBuf[256];
 const float speedEps = 30;
 
 DMA_InstType comm = {
-  "comm(u2)", &huart2, &hdma_usart2_rx,
+  "comm(u2)", &huart2, &hdma_usart2_rx, 
   uart2RxBuf,
   255, 0
 };
@@ -50,8 +50,6 @@ EDC21Player_InstType ePlayer[2] = {
     0, {0, 0}, 0, {0, 0, 0}, {0, 0, 0}
   }
 };
-
-EDC21Player_InstType *ePlayerPointer;
 
 Position_InstType Vehicle = {
   0.f,  0.f,  0.f,    //delta

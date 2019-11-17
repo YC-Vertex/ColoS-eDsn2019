@@ -8,7 +8,7 @@ void MainTaskDaemon(void const * argument) {
   
   osDelay(1000);
   
-  ATTRACT;
+  ATTRACT; 
   /*
   
   setTarget(&Vehicle, 1050+125, 0, 0);
