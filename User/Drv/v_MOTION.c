@@ -3,6 +3,57 @@
 
 static float old;
 
+void LocInit() {
+  ePlayerPointer=&ePlayer[carFlag];
+  Vehicle.deltaX = ePlayerPointer->pos.x;
+  Vehicle.deltaY = ePlayerPointer->pos.y;
+}
+
+void NEout(){
+  setSpeed(motor,&Vehicle,200,0,0);
+  osDelay(1000);
+  setSpeed(motor,&Vehicle,0,0,0);
+  osDelay(500);
+  setCircle(motor,&Vehicle,160,103,3.5);
+  setCircle(motor,&Vehicle,-70,-300,4);
+  setTarget(&Vehicle,540,240,180);
+  navFlag = 1;
+  float dx=(Vehicle.deltaX-Vehicle.targetX);
+  float dy=(Vehicle.deltaY-Vehicle.targetY);
+  float dz=(Vehicle.deltaZ-Vehicle.targetZ);
+  while(fabs(dx)+fabs(dy)>60 || fabs(dz)>5){
+    osDelay(100);
+    dx=(Vehicle.deltaX-Vehicle.targetX);
+    dy=(Vehicle.deltaY-Vehicle.targetY);
+    dz=(Vehicle.deltaZ-Vehicle.targetZ);
+  }
+  navFlag = 0;
+  return;
+  
+};
+
+void SWout(){
+  
+  setSpeed(motor,&Vehicle,200,0,0);
+  osDelay(1000);
+  setSpeed(motor,&Vehicle,0,0,0);
+  osDelay(500);
+  setCircle(motor,&Vehicle,-160,-103,3.5);
+  setCircle(motor,&Vehicle,70,300,4);
+  setTarget(&Vehicle,240,540,-90);
+  navFlag = 1;
+  float dx=(Vehicle.deltaX-Vehicle.targetX);
+  float dy=(Vehicle.deltaY-Vehicle.targetY);
+  float dz=(Vehicle.deltaZ-Vehicle.targetZ);
+  while(fabs(dx)+fabs(dy)>60 || fabs(dz)>5){
+    osDelay(100);
+    dx=(Vehicle.deltaX-Vehicle.targetX);
+    dy=(Vehicle.deltaY-Vehicle.targetY);
+    dz=(Vehicle.deltaZ-Vehicle.targetZ);
+  }
+  navFlag = 0;
+};
+
 void setTarget(Position_InstType* pInst, float tarx, float tary,float tarz) {
   pInst->targetX = tarx;
   pInst->targetY = tary;
@@ -17,20 +68,21 @@ void setSpeed(MOTOR_InstType* mt,Position_InstType* pInst, float xSpeed, float y
   ySpeed /= pInst->yMultiples;
   zSpeed /= pInst->zMultiples;
   float max = ABS(xSpeed) + ABS(ySpeed)+ ABS(zSpeed), d = 1.f;
-  if (max > 500) d = 500 / max;
+  if (max > 500) d = 300 / max;
   MotorSetSpeed(mt + 0, d * (xSpeed + ySpeed + zSpeed));
   MotorSetSpeed(mt + 1, d * (xSpeed - ySpeed - zSpeed));
   MotorSetSpeed(mt + 2, d * (xSpeed - ySpeed + zSpeed));
   MotorSetSpeed(mt + 3, d * (xSpeed + ySpeed - zSpeed));
 }
 
-void setCircle(MOTOR_InstType* mt,Position_InstType* pInst, float R,float theta,float time) {
+void setCircle(MOTOR_InstType* mt,Position_InstType* pInst, float theta,float R,float time) {
   float xSpeed = theta * R * D2R / time;
   float zspeed = theta / time ; 
   setSpeed(mt,pInst,xSpeed,0,zspeed);
   osDelay((uint32_t)(time*1000));
   setSpeed(mt,pInst,0,0,0);
 }
+
 
 void speedHandler(Position_InstType* pInst, MOTOR_InstType* mt,JY61_InstType* gyro, float dt) {
   pInst->xSpeed = (mt[0].speed + mt[1].speed + mt[2].speed + mt[3].speed) *
@@ -43,9 +95,9 @@ void speedHandler(Position_InstType* pInst, MOTOR_InstType* mt,JY61_InstType* gy
   double c= cos(1.*D2R *pInst->deltaZ),s=sin(1.*D2R *pInst->deltaZ);
   pInst->deltaX += (pInst->xSpeed * c -  pInst->ySpeed *s) * dt;
   pInst->deltaY += (pInst->ySpeed * c +  pInst->xSpeed *s) * dt;
-  float nxt=-gyro->yall;
-  if(nxt - old < -180) nxt+=360;
-  if(nxt - old > 180) nxt-=360;
+  float nxt=gyro->yall;
+  while(nxt - old < -180) nxt+=360;
+  while(nxt - old > 180) nxt-=360;
   pInst->deltaZ += pInst->zSpeed*dt;
   pInst->deltaZ+=(nxt-pInst->deltaZ)/5;
   if(pInst->deltaZ - nxt > 5 )pInst->deltaZ=nxt;

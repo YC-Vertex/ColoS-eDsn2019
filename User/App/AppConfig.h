@@ -23,6 +23,7 @@ extern DMA_InstType sensor;
 extern DMA_InstType monitor;
 extern EDC21Global_InstType eGlobal;
 extern EDC21Player_InstType ePlayer[2];
+extern EDC21Player_InstType* ePlayerPointer;
 extern MOTOR_InstType motor[4];
 extern JY61_InstType jy;
 extern Position_InstType Vehicle;

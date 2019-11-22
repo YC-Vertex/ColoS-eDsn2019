@@ -8,9 +8,13 @@ void MainTaskDaemon(void const * argument) {
   
   osDelay(1000);
   
-  ATTRACT; 
-  /*
+  ATTRACT;
   
+  
+  while (startFlag == 0) osDelay(100);
+  // while (eGlobal.status != START || startFlag == 0) osDelay(100);
+  
+  /*
   setTarget(&Vehicle, 1050+125, 0, 0);
   osDelay(100);
   while (Vehicle.xSpeed*Vehicle.xSpeed+Vehicle.ySpeed*Vehicle.ySpeed+Vehicle.zSpeed*Vehicle.zSpeed > 1) osDelay(5);

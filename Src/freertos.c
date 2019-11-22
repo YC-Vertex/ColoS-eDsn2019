@@ -53,6 +53,7 @@ osThreadId SensorTaskHandle;
 osThreadId EncoderTaskHandle;
 osThreadId LocateTaskHandle;
 osThreadId CommTaskHandle;
+osThreadId MonitorTaskHandle;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -64,6 +65,7 @@ void SensorTaskDaemon(void const * argument);
 void EncoderTaskDaemon(void const * argument);
 void LocateTaskDaemon(void const * argument);
 void CommTaskDaemon(void const * argument);
+void MonitorTaskDaemon(void const * argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -129,6 +131,10 @@ void MX_FREERTOS_Init(void) {
   /* definition and creation of CommTask */
   osThreadDef(CommTask, CommTaskDaemon, osPriorityNormal, 0, 128);
   CommTaskHandle = osThreadCreate(osThread(CommTask), NULL);
+
+  /* definition and creation of MonitorTask */
+  osThreadDef(MonitorTask, MonitorTaskDaemon, osPriorityAboveNormal, 0, 128);
+  MonitorTaskHandle = osThreadCreate(osThread(MonitorTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -225,6 +231,24 @@ __weak void CommTaskDaemon(void const * argument)
     osDelay(1);
   }
   /* USER CODE END CommTaskDaemon */
+}
+
+/* USER CODE BEGIN Header_MonitorTaskDaemon */
+/**
+* @brief Function implementing the MonitorTask thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_MonitorTaskDaemon */
+__weak void MonitorTaskDaemon(void const * argument)
+{
+  /* USER CODE BEGIN MonitorTaskDaemon */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END MonitorTaskDaemon */
 }
 
 /* Private application code --------------------------------------------------*/

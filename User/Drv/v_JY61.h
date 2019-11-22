@@ -5,5 +5,6 @@ typedef struct {
   float aX, aY, aZ;
   float gX, gY, gZ;
   float row, yall, pitch;
+  float rdelta, ydelta, pdelta;
 } JY61_InstType;
 #endif

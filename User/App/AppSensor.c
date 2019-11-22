@@ -63,10 +63,10 @@ void SensorTaskDaemon(void const * argument) {
               y = ((int16_t)tempBuf[i+7] << 8) | tempBuf[i+6];
               rf = r / 32768.f * 180.f;
               pf = p / 32768.f * 180.f;
-              yf = y / 32768.f * 180.f;
-              jy.row = rf;
-              jy.pitch = pf;
-              jy.yall = yf;
+              yf = - y / 32768.f * 180.f;
+              jy.row = rf + jy.rdelta;
+              jy.pitch = pf + jy.pdelta;
+              jy.yall = yf + jy.ydelta;
               #ifdef __DEBUG_2__
               printf("r%f p%f y%f\r\n", jy.row, jy.pitch, jy.yall);
               #endif
@@ -75,7 +75,7 @@ void SensorTaskDaemon(void const * argument) {
               continue;
             i += 10;
           }
-          else{
+          else {
             printf("SUMERROR");
             continue;
           }

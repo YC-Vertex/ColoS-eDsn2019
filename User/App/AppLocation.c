@@ -9,8 +9,8 @@ void LocateTaskDaemon(void const * argument) {
     int dt = (int)thisTime  - (int)lastTime;
     dt = dt >= 0 ? dt : 0x10000 + dt;
     speedHandler(&Vehicle, motor, &jy ,1.f * dt / 1000000);
-    if (navFlag) {
-      moveHandler(&Vehicle, motor, 1.f * dt / 1000000);
+    moveHandler(&Vehicle, motor, 1.f * dt / 1000000);
+    if (navFlag && eGlobal.status == START) {
       setSpeed(motor,&Vehicle, Vehicle.xSetSpeed, Vehicle.ySetSpeed, Vehicle.zSetSpeed);
     }
     
@@ -42,7 +42,7 @@ void EncoderTaskDaemon(void const * argument) {
     
     for (uint8_t i = 0; i < 4; i++)
       if (motor[i].atWork)
-        MotorOutput(motor + i);
+          MotorOutput(motor + i);
       
     for (uint8_t i = 0; i < 4; i++) {
       if (motor[i].atWork && ABS(motor[i].targetSpd) < 1e-2) {

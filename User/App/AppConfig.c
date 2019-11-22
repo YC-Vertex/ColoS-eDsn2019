@@ -1,6 +1,6 @@
 #include "AppConfig.h"
 
-_Bool startFlag = 0;
+_Bool startFlag = 0; // manual start
 _Bool carFlag = 0; // 0 - A, 1 - B
 _Bool navFlag = 0;
 
@@ -50,6 +50,7 @@ EDC21Player_InstType ePlayer[2] = {
     0, {0, 0}, 0, {0, 0, 0}, {0, 0, 0}
   }
 };
+EDC21Player_InstType* ePlayerPointer;
 
 Position_InstType Vehicle = {
   0.f,  0.f,  0.f,    //delta
@@ -57,8 +58,8 @@ Position_InstType Vehicle = {
   0,    0,    0,      //target
   0.f,  0.f,  0.f,    //speed XYZ
   0.f,  0.f,  0.f,    //set speed
-  8.f,  8.f,  8.f,   //kp
-  1.f,  1.f,  2.f,   //kd
+  8.f,  8.f,  7.f,   //kp
+  1.f,  1.f,  1.f,   //kd
   0.f,  0.f,  0.f,    //curE
   0.f,  0.f,  0.f     //prvE
 };
@@ -105,6 +106,7 @@ MOTOR_InstType motor[4] = {
 
 JY61_InstType jy = {
   "JY61",
+  .0f, .0f, .0f,
   .0f, .0f, .0f,
   .0f, .0f, .0f,
   .0f, .0f, .0f

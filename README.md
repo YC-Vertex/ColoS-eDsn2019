@@ -3,6 +3,12 @@ Car "ColoS" of team Colossus Trio in eDsnCompetition 2019
 
 ---
 
+## 20191122 22:30 - wys & zyc:
+
+迟来的上传。这里是初赛版本，马上做代码整理重构。
+
+---
+
 ## 20191113 23:45 - zyc:
 
 把蓝牙、上位机功能调通了，本地测试过，明天去连上位机测试
