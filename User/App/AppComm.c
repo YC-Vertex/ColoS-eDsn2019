@@ -34,52 +34,28 @@ void CommTaskDaemon(void const * argument) {
               } else if (rxBuf[1] == '3') {
                 setTarget(&Vehicle, 2600, 2600, Vehicle.deltaZ);
                 navFlag = 1;
-                float dx=(Vehicle.deltaX-Vehicle.targetX);
-                float dy=(Vehicle.deltaY-Vehicle.targetY);
-                float dz=(Vehicle.deltaZ-Vehicle.targetZ);
-                while(fabs(dx)+fabs(dy)>60 || fabs(dz)>3){
-                  osDelay(100);
-                  dx=(Vehicle.deltaX-Vehicle.targetX);
-                  dy=(Vehicle.deltaY-Vehicle.targetY);
-                  dz=(Vehicle.deltaZ-Vehicle.targetZ);
-                }
+                WaitTillFinishByLoc(30.f, 3.f);
                 navFlag = 0;
-                setSpeed(motor,&Vehicle,0,0,0);
+                setSpeed(motor, &Vehicle, 0, 0, 0);
               } else if (rxBuf[1] == '4') {
                 int x, y;
                 sscanf(rxBuf, "$q4,%d,%d;", &x, &y);
                 setTarget(&Vehicle, x, y, Vehicle.deltaZ);
                 ATTRACT;
                 navFlag = 1;
-                float dx=(Vehicle.deltaX-Vehicle.targetX);
-                float dy=(Vehicle.deltaY-Vehicle.targetY);
-                float dz=(Vehicle.deltaZ-Vehicle.targetZ);
-                while(fabs(dx)+fabs(dy)>20 || fabs(dz)>3){
-                  osDelay(100);
-                  dx=(Vehicle.deltaX-Vehicle.targetX);
-                  dy=(Vehicle.deltaY-Vehicle.targetY);
-                  dz=(Vehicle.deltaZ-Vehicle.targetZ);
-                }
+                WaitTillFinishByLoc(30.f, 3.f);
                 osDelay(100);
                 setTarget(&Vehicle, x, 1200, Vehicle.deltaZ);
-                dx=(Vehicle.deltaX-Vehicle.targetX);
-                dy=(Vehicle.deltaY-Vehicle.targetY);
-                dz=(Vehicle.deltaZ-Vehicle.targetZ);
-                while(fabs(dx)+fabs(dy)>20 || fabs(dz)>3){
-                  osDelay(100);
-                  dx=(Vehicle.deltaX-Vehicle.targetX);
-                  dy=(Vehicle.deltaY-Vehicle.targetY);
-                  dz=(Vehicle.deltaZ-Vehicle.targetZ);
-                }
-                BREAKUP;
+                WaitTillFinishByLoc(30.f, 3.f);
                 navFlag = 0;
-                setSpeed(motor,&Vehicle,0,0,0);
+                BREAKUP;
+                setSpeed(motor, &Vehicle, 0, 0, 0);
               }
             } else if (rxBuf[0] == 'x') { // setTarget
               int x, y;
               float angle;
               int t = sscanf(rxBuf, "x%dy%dz%f;", &x, &y, &angle);
-              if(t==3){
+              if (t == 3) {
                 setTarget(&Vehicle, x, y, angle);
                 navFlag = 1;
                 printf(">> set: %d %d %f\r\n", x, y, angle);
@@ -87,40 +63,30 @@ void CommTaskDaemon(void const * argument) {
             } else if (rxBuf[0] == 's') { // setSpeed
               float x, y, angle;
               int t = sscanf(rxBuf, "sx%fy%fz%f;", &x, &y, &angle);
-              if(t==3){
+              if (t == 3) {
+                setSpeed(motor, &Vehicle, x, y, angle);
                 navFlag = 0;
-                setSpeed(motor,&Vehicle, x, y, angle);
               }
             } else if (rxBuf[0] == 't') { // setCircle
               float theta, r, time;
               int t = sscanf(rxBuf, "t%fr%ft%f;", &theta, &r, &time);
-              setCircle(motor,&Vehicle,theta, r, time);
+              setCircle(motor, &Vehicle, theta, r, time);
               navFlag = 0;
-            }              
-            else if (rxBuf[0] == 'c') { // set car and start
+            } else if (rxBuf[0] == 'c') { // set car and start
               char car;
               float angle;
               sscanf(rxBuf, "car%c%f;", &car, &angle);
-              Vehicle.deltaZ = angle;
-              jy.ydelta += angle- jy.yall;
-              Vehicle.deltaX = ePlayerPointer->pos.x;
-              Vehicle.deltaY = ePlayerPointer->pos.y;
-              startFlag = 1;
-              if (car == 'A') {
-                carFlag = 0;
-                LocInit();
-              } else if (car == 'B') {
-                carFlag = 1;
-                LocInit();
-              } else
+              if (LocInit(car, angle))
+                startFlag = 1;
+              else
                 startFlag = 0;
             } else if (rxBuf[0] == 'm') { // set multiple
               float a,b,c;
               int t = sscanf(rxBuf, "mx%fy%fz%f", &a, &b, &c);
-              if(t==3){
-                Vehicle.xMultiples=a;
-                Vehicle.yMultiples=b;
-                Vehicle.zMultiples=c;
+              if (t == 3) {
+                Vehicle.xMultiples = a;
+                Vehicle.yMultiples = b;
+                Vehicle.zMultiples = c;
                 printf("set: %f %f %f\r\n", a, b, c);
               }
             }
@@ -148,7 +114,13 @@ void MonitorTaskDaemon(void const * argument) {
   
   while (1) {
     EDC21Handler(&monitor, &eGlobal, ePlayer + 0, ePlayer + 1);
-    if(eGlobal.status != START) setSpeed(motor,&Vehicle,0,0,0);
+    // 如果无上位机调试请把下面这行注释掉
+    /*
+    if (eGlobal.status != START) {
+      navFlag = 0;
+      setSpeed(motor, &Vehicle, 0, 0, 0);
+    }
+    */
     #ifdef __DEBUG_1__
     if (count++ >= 20) {
       EdcDispGlobalInfo(&eGlobal);

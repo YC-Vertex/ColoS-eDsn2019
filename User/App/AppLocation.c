@@ -8,10 +8,10 @@ void LocateTaskDaemon(void const * argument) {
     thisTime = __HAL_TIM_GET_COUNTER(&htim6);
     int dt = (int)thisTime  - (int)lastTime;
     dt = dt >= 0 ? dt : 0x10000 + dt;
-    speedHandler(&Vehicle, motor, &jy ,1.f * dt / 1000000);
+    speedHandler(&Vehicle, motor, &jy, 1.f * dt / 1000000);
     moveHandler(&Vehicle, motor, 1.f * dt / 1000000);
-    if (navFlag && eGlobal.status == START) {
-      setSpeed(motor,&Vehicle, Vehicle.xSetSpeed, Vehicle.ySetSpeed, Vehicle.zSetSpeed);
+    if (navFlag) {
+      setSpeed(motor, &Vehicle, Vehicle.xSetSpeed, Vehicle.ySetSpeed, Vehicle.zSetSpeed);
     }
     
     #ifdef __DEBUG_1__

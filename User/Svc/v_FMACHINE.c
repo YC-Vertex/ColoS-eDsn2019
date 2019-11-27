@@ -1,5 +1,5 @@
 #include "v_FMACHINE.h"
-#include "v_AppConfig.h"
+#include "AppConfig.h"
 
 float gYdelta = 0.f, navAlpha = 1.f;
 const float beta1 = .5f, beta2 = .4f, beta3 = .4f;
