@@ -4,10 +4,25 @@
 void LocateTaskDaemon(void const * argument) {
   uint8_t count = 0;
   
-  for (uint16_t thisTime, lastTime = __HAL_TIM_GET_COUNTER(&htim6); ; osDelay(37)) {
+  for (uint16_t thisTime, lastTime = __HAL_TIM_GET_COUNTER(&htim6); ; osDelay(27)) {
     thisTime = __HAL_TIM_GET_COUNTER(&htim6);
     int dt = (int)thisTime  - (int)lastTime;
     dt = dt >= 0 ? dt : 0x10000 + dt;
+    
+    if (runMap) {
+      if (eMap.length == 0) {
+        printf(">> Arrive: %d\r\n", eMap.curPoint);
+      } else {
+        XYPos target = {
+          eMap.origin.x + (eMap.route[0] % 6) * 300,
+          eMap.origin.y + (eMap.route[0] / 6) * 300
+        };
+        printf(">> Target: %d (%d %d)\r\n", eMap.route[0], target.x, target.y);
+        defaultSetTarget(target.x, target.y, 0);
+      }
+      runMap = 0;
+    }
+    
     speedHandler(&Vehicle, motor, &jy, 1.f * dt / 1000000);
     moveHandler(&Vehicle, motor, 1.f * dt / 1000000);
     if (navFlag) {
@@ -53,6 +68,6 @@ void EncoderTaskDaemon(void const * argument) {
       }
     }
     
-    osDelay(7);
+    osDelay(17);
   }
 }

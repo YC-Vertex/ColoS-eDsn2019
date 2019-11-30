@@ -365,7 +365,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F407xx,USE_HAL_DRIVER,STM32F407xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Inc;                 ../Drivers/STM32F4xx_HAL_Driver/Inc;                 ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;                 ../Drivers/CMSIS/Device/ST/STM32F4xx/Include;                 ../Drivers/CMSIS/Include;                 ..\User;                 ..\User\Bsp;                 ..\User\Drv;                 ..\User\App;                 ../Middlewares/Third_Party/FreeRTOS/Source/include;                 ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS;                 ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F</IncludePath>
+              <IncludePath>../Inc;                  ../Drivers/STM32F4xx_HAL_Driver/Inc;                  ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;                  ../Drivers/CMSIS/Device/ST/STM32F4xx/Include;                  ../Drivers/CMSIS/Include;                  ..\User;                  ..\User\Bsp;                  ..\User\Drv;                  ..\User\Svc;                  ..\User\App;                  ../Middlewares/Third_Party/FreeRTOS/Source/include;                  ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS;                  ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -434,16 +434,6 @@
               <FilePath>..\User\Drv\v_MOTOR.c</FilePath>
             </File>
             <File>
-              <FileName>v_MOTION.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\User\Drv\v_MOTION.c</FilePath>
-            </File>
-            <File>
-              <FileName>v_EDC21.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\User\Drv\v_EDC21.c</FilePath>
-            </File>
-            <File>
               <FileName>v_JY61.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\User\Drv\v_JY61.h</FilePath>
@@ -451,22 +441,47 @@
           </Files>
         </Group>
         <Group>
+          <GroupName>User/Svc</GroupName>
+          <Files>
+            <File>
+              <FileName>v_EDC21.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Svc\v_EDC21.c</FilePath>
+            </File>
+            <File>
+              <FileName>v_MOTION.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Svc\v_MOTION.c</FilePath>
+            </File>
+            <File>
+              <FileName>v_EVENT.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Svc\v_EVENT.c</FilePath>
+            </File>
+            <File>
+              <FileName>v_MAP.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Svc\v_MAP.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
           <GroupName>User/App</GroupName>
           <Files>
+            <File>
+              <FileName>AppConfig.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\App\AppConfig.c</FilePath>
+            </File>
             <File>
               <FileName>AppBasic.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\User\App\AppBasic.c</FilePath>
             </File>
             <File>
-              <FileName>AppSensor.c</FileName>
+              <FileName>AppLocation.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\User\App\AppSensor.c</FilePath>
-            </File>
-            <File>
-              <FileName>AppConfig.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\User\App\AppConfig.c</FilePath>
+              <FilePath>..\User\App\AppLocation.c</FilePath>
             </File>
             <File>
               <FileName>AppComm.c</FileName>
@@ -474,9 +489,9 @@
               <FilePath>..\User\App\AppComm.c</FilePath>
             </File>
             <File>
-              <FileName>AppLocation.c</FileName>
+              <FileName>AppSensor.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\User\App\AppLocation.c</FilePath>
+              <FilePath>..\User\App\AppSensor.c</FilePath>
             </File>
           </Files>
         </Group>

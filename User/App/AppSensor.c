@@ -6,7 +6,7 @@ void SensorTaskDaemon(void const * argument) {
   uint8_t cmd[3] = {0xff, 0xaa, 0x67};
   HAL_UART_Transmit(sensor.usartx, cmd, 3, 2000);  
   osDelay(200);
-  cmd[2]=0x52;
+  cmd[2] = 0x52;
   HAL_UART_Transmit(sensor.usartx, cmd, 3, 2000);
   osDelay(200);
   
@@ -15,7 +15,7 @@ void SensorTaskDaemon(void const * argument) {
     uint16_t length = DmaRecv(&sensor, tempBuf, 44);
     
     if (length) {
-      for (int i = 0; i < length-11; ++i) {
+      for (int i = 0; i < length - 11; ++i) {
         if (tempBuf[i] == 0x55) {
           
           uint8_t sum = 0;
@@ -84,6 +84,71 @@ void SensorTaskDaemon(void const * argument) {
       }
     }
     
+    osDelay(53);
+  }
+}
+
+int obstacle[4];
+void MapTaskDaemon(void const * argument) {
+  InitMap(&eMap);
+  osDelay(1000);
+  int lastTarget = eMap.tarPoint;
+  
+  while (1) {
+    uint8_t tempBuf[256] = {0};
+    uint16_t length = DmaRecv(&comm, tempBuf, 255);
+    
+    XYPos car = {Vehicle.deltaX, Vehicle.deltaY};
+    _Bool updateFlag = 0;
+    if (lastTarget != eMap.tarPoint) updateFlag = 1;
+    lastTarget = eMap.tarPoint;
+    if (UpdatePos(&eMap, car))
+      updateFlag = 1;
+    
+    /*
+    if (length) {
+      if (tempBuf[0] == '+') {
+        // 判断是否获取了完整的数据
+        _Bool isEnd = 0;
+        for (int i = 0; i < length; ++i) {
+          if (tempBuf[i] == ';') {
+            isEnd = 1;
+            break;
+          }
+        }
+        // 如果获取了完整的数据
+        if (isEnd) {
+          int t = sscanf(tempBuf, "+%d-%d<%d>%d;%*s", obstacle+0, obstacle+1, obstacle+2, obstacle+3);
+          if (t == 4) {
+            
+            // if (ePlayerPointer->isInLaby || mockLaby) {
+            if (mockLaby) {
+              if (UpdateMap(&eMap, car, obstacle, Vehicle.deltaZ)) updateFlag = 1;
+            }
+            
+            #ifdef __DEBUG_2__
+            printf("dist: %d %d %d %d\r\n", obstacle[0], obstacle[1], obstacle[2], obstacle[3]);
+            #endif
+          }
+        }
+      }
+    }
+    */
+    
+    if (forceUpdate || (updateFlag && (/*ePlayerPointer->isInLaby || */mockLaby))) {
+      if (MapHandler(&eMap)) {
+        runMap = 1;
+        osDelay(53);
+        WaitTillFinishByLoc(60.f, 6.f);
+        forceUpdate = 0;
+      } else {
+        forceUpdate = 0;
+      }
+    } else {
+      runMap = 0;
+    }
+    
+    // 需要稍快，保证图搜索时间(?)
     osDelay(43);
   }
 }

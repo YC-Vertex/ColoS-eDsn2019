@@ -52,8 +52,9 @@ osThreadId MainTaskHandle;
 osThreadId SensorTaskHandle;
 osThreadId EncoderTaskHandle;
 osThreadId LocateTaskHandle;
-osThreadId CommTaskHandle;
 osThreadId MonitorTaskHandle;
+osThreadId DebugTaskHandle;
+osThreadId MapTaskHandle;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -64,8 +65,9 @@ void MainTaskDaemon(void const * argument);
 void SensorTaskDaemon(void const * argument);
 void EncoderTaskDaemon(void const * argument);
 void LocateTaskDaemon(void const * argument);
-void CommTaskDaemon(void const * argument);
 void MonitorTaskDaemon(void const * argument);
+void DebugTaskDaemon(void const * argument);
+void MapTaskDaemon(void const * argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -117,7 +119,7 @@ void MX_FREERTOS_Init(void) {
   MainTaskHandle = osThreadCreate(osThread(MainTask), NULL);
 
   /* definition and creation of SensorTask */
-  osThreadDef(SensorTask, SensorTaskDaemon, osPriorityHigh, 0, 128);
+  osThreadDef(SensorTask, SensorTaskDaemon, osPriorityAboveNormal, 0, 128);
   SensorTaskHandle = osThreadCreate(osThread(SensorTask), NULL);
 
   /* definition and creation of EncoderTask */
@@ -128,13 +130,17 @@ void MX_FREERTOS_Init(void) {
   osThreadDef(LocateTask, LocateTaskDaemon, osPriorityRealtime, 0, 128);
   LocateTaskHandle = osThreadCreate(osThread(LocateTask), NULL);
 
-  /* definition and creation of CommTask */
-  osThreadDef(CommTask, CommTaskDaemon, osPriorityNormal, 0, 128);
-  CommTaskHandle = osThreadCreate(osThread(CommTask), NULL);
-
   /* definition and creation of MonitorTask */
   osThreadDef(MonitorTask, MonitorTaskDaemon, osPriorityAboveNormal, 0, 128);
   MonitorTaskHandle = osThreadCreate(osThread(MonitorTask), NULL);
+
+  /* definition and creation of DebugTask */
+  osThreadDef(DebugTask, DebugTaskDaemon, osPriorityNormal, 0, 128);
+  DebugTaskHandle = osThreadCreate(osThread(DebugTask), NULL);
+
+  /* definition and creation of MapTask */
+  osThreadDef(MapTask, MapTaskDaemon, osPriorityNormal, 0, 128);
+  MapTaskHandle = osThreadCreate(osThread(MapTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -215,24 +221,6 @@ __weak void LocateTaskDaemon(void const * argument)
   /* USER CODE END LocateTaskDaemon */
 }
 
-/* USER CODE BEGIN Header_CommTaskDaemon */
-/**
-* @brief Function implementing the CommTask thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_CommTaskDaemon */
-__weak void CommTaskDaemon(void const * argument)
-{
-  /* USER CODE BEGIN CommTaskDaemon */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END CommTaskDaemon */
-}
-
 /* USER CODE BEGIN Header_MonitorTaskDaemon */
 /**
 * @brief Function implementing the MonitorTask thread.
@@ -249,6 +237,42 @@ __weak void MonitorTaskDaemon(void const * argument)
     osDelay(1);
   }
   /* USER CODE END MonitorTaskDaemon */
+}
+
+/* USER CODE BEGIN Header_DebugTaskDaemon */
+/**
+* @brief Function implementing the DebugTask thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_DebugTaskDaemon */
+__weak void DebugTaskDaemon(void const * argument)
+{
+  /* USER CODE BEGIN DebugTaskDaemon */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END DebugTaskDaemon */
+}
+
+/* USER CODE BEGIN Header_MapTaskDaemon */
+/**
+* @brief Function implementing the MapTask thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_MapTaskDaemon */
+__weak void MapTaskDaemon(void const * argument)
+{
+  /* USER CODE BEGIN MapTaskDaemon */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END MapTaskDaemon */
 }
 
 /* Private application code --------------------------------------------------*/

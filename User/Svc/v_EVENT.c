@@ -1,46 +1,33 @@
 #include "v_EVENT.h"
 
 void NEout(){
-  setSpeed(motor,&Vehicle,200,0,0);
-  osDelay(1000);
-  setSpeed(motor,&Vehicle,0,0,0);
+  setSpeed(motor, &Vehicle, 500, 0, 0);
   osDelay(500);
-  setCircle(motor,&Vehicle,160,103,3.5);
-  setCircle(motor,&Vehicle,-70,-300,4);
-  setTarget(&Vehicle,540,240,180);
-  navFlag = 1;
-  float dx=(Vehicle.deltaX-Vehicle.targetX);
-  float dy=(Vehicle.deltaY-Vehicle.targetY);
-  float dz=(Vehicle.deltaZ-Vehicle.targetZ);
-  while(fabs(dx)+fabs(dy)>60 || fabs(dz)>5){
-    osDelay(100);
-    dx=(Vehicle.deltaX-Vehicle.targetX);
-    dy=(Vehicle.deltaY-Vehicle.targetY);
-    dz=(Vehicle.deltaZ-Vehicle.targetZ);
-  }
-  navFlag = 0;
-  return;
+  setSpeed(motor, &Vehicle, 0, 0, 0);
+  osDelay(200);
   
+  setCircle(motor, &Vehicle, 160, 110, 2.5);
+  setCircle(motor, &Vehicle, -70, -300, 2);
+  /*
+  setTarget(&Vehicle, 540, 240, 180);
+  navFlag = 1;
+  WaitTillFinishByLoc(30.f, 3.f);
+  navFlag = 0;
+  */
 };
 
 void SWout(){
-  
-  setSpeed(motor,&Vehicle,200,0,0);
-  osDelay(1000);
-  setSpeed(motor,&Vehicle,0,0,0);
+  setSpeed(motor, &Vehicle, 500, 0, 0);
   osDelay(500);
-  setCircle(motor,&Vehicle,-160,-103,3.5);
-  setCircle(motor,&Vehicle,70,300,4);
-  setTarget(&Vehicle,240,540,-90);
+  setSpeed(motor, &Vehicle, 0, 0, 0);
+  osDelay(200);
+  
+  setCircle(motor, &Vehicle, -160, -110, 2.5);
+  setCircle(motor, &Vehicle, 70, 300, 2);
+  /*
+  setTarget(&Vehicle, 240, 540, -90);
   navFlag = 1;
-  float dx=(Vehicle.deltaX-Vehicle.targetX);
-  float dy=(Vehicle.deltaY-Vehicle.targetY);
-  float dz=(Vehicle.deltaZ-Vehicle.targetZ);
-  while(fabs(dx)+fabs(dy)>60 || fabs(dz)>5){
-    osDelay(100);
-    dx=(Vehicle.deltaX-Vehicle.targetX);
-    dy=(Vehicle.deltaY-Vehicle.targetY);
-    dz=(Vehicle.deltaZ-Vehicle.targetZ);
-  }
+  WaitTillFinishByLoc(30.f, 3.f);
   navFlag = 0;
+  */
 };

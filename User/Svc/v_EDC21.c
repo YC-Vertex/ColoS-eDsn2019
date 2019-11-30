@@ -4,6 +4,44 @@ static uint16_t rxBufPtr = 0;
 static uint8_t rxBuf[128];
 static _Bool isStart = 0;
 
+
+
+void EDC21Handler(DMA_InstType * dma, EDC21Global_InstType * gb,
+  EDC21Player_InstType * p1, EDC21Player_InstType * p2) {
+    
+  uint8_t tempBuf[100] = {0};
+  uint16_t length = DmaRecv(dma, tempBuf, 100);
+    
+  if (length) {
+    for (int i = 0; i < length; ++i) {
+      // 这段这么写真的好吗
+      if (isStart) {
+        rxBuf[rxBufPtr++] = tempBuf[i];
+        if (rxBuf[rxBufPtr-2] == 0x0d && rxBuf[rxBufPtr-1] == 0x0a) {
+          Decode(rxBuf, gb, p1, p2);
+          #ifdef __DEBUG_2__
+          printf("Decode: ");
+          for (int j = 0; j < rxBufPtr; ++j)
+            printf("%x ", rxBuf[j]);
+          printf("\r\n");
+          #endif
+          memset(rxBuf, 0, 100);
+          rxBufPtr = 0;
+        } else if (rxBufPtr == 128) {
+          memset(rxBuf, 0, 100);
+          isStart = 0;
+        }
+      } else {
+        if (i != length-1 && tempBuf[i] == 0x0d && tempBuf[i+1] == 0x0a) {
+          rxBufPtr = 0;
+          isStart = 1;
+          i += 1;
+        }
+      }
+    }
+  }
+}
+
 _Bool Decode(uint8_t * data, EDC21Global_InstType * gb,
   EDC21Player_InstType * p1, EDC21Player_InstType * p2) {
     
@@ -60,45 +98,6 @@ _Bool Decode(uint8_t * data, EDC21Global_InstType * gb,
   p2->pos.y *= 10;
   
   return 1;
-}
-
-
-
-void EDC21Handler(DMA_InstType * dma, EDC21Global_InstType * gb,
-  EDC21Player_InstType * p1, EDC21Player_InstType * p2) {
-    
-  uint8_t tempBuf[100] = {0};
-  uint16_t length = DmaRecv(dma, tempBuf, 100);
-    
-  if (length) {
-    for (int i = 0; i < length; ++i) {
-      // 这段这么写真的好吗
-      if (isStart) {
-        rxBuf[rxBufPtr++] = tempBuf[i];
-        if (rxBuf[rxBufPtr-2] == 0x0d && rxBuf[rxBufPtr-1] == 0x0a) {
-          Decode(rxBuf, gb, p1, p2);
-          #ifdef __DEBUG_2__
-          printf("Decode: ");
-          for (int j = 0; j < rxBufPtr; ++j)
-            printf("%x ", rxBuf[j]);
-          printf("\r\n");
-          #endif
-          memset(rxBuf, 0, 100);
-          rxBufPtr = 0;
-        } else if (rxBufPtr == 128) {
-          memset(rxBuf, 0, 100);
-          isStart = 0;
-        }
-      } else {
-        if (i != length-1 && tempBuf[i] == 0x0d && tempBuf[i+1] == 0x0a) {
-          rxBufPtr = 0;
-          isStart = 1;
-          i += 1;
-        }
-      }
-    }
-  } else {
-  }
 }
 
 void EdcDispGlobalInfo(EDC21Global_InstType * g) {

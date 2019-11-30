@@ -1,8 +1,11 @@
 #include "AppConfig.h"
 
-_Bool startFlag = 0; // manual start
-_Bool carFlag = 0; // 0 - A, 1 - B
-_Bool navFlag = 0;
+_Bool startFlag = 0; // 主进程锁，默认不开始
+_Bool carFlag = 0;   // 0 - A, 1 - B
+_Bool navFlag = 0;   // 自动调速锁，无默认值
+_Bool mockLaby = 0;  // 模拟迷宫
+_Bool runMap = 0;
+_Bool forceUpdate = 0;
 
 uint8_t uart2RxBuf[256];
 uint8_t uart3RxBuf[256];
@@ -52,16 +55,30 @@ EDC21Player_InstType ePlayer[2] = {
 };
 EDC21Player_InstType* ePlayerPointer;
 
+EDC21Map_InstType eMap = {
+  "EDC map",
+  
+  {0},            // map
+  {-1},           // route
+  -1,             // length
+  
+  -1, {0, 0}, -1, // curPoint, tarPos, tarPoint
+  
+  {600, 600},       // origin of labyrinth
+  {110, 110, 80, 80},   // us sensor offset
+  {0, 0, 0, 0}    // obstacles
+};
+
 Position_InstType Vehicle = {
-  0.f,  0.f,  0.f,    //delta
-  .98f, .84f, .35f,  //Mutiple
-  0,    0,    0,      //target
-  0.f,  0.f,  0.f,    //speed XYZ
-  0.f,  0.f,  0.f,    //set speed
-  8.f,  8.f,  7.f,   //kp
-  1.f,  1.f,  1.f,   //kd
-  0.f,  0.f,  0.f,    //curE
-  0.f,  0.f,  0.f     //prvE
+  0.f,  0.f,  0.f,    // delta
+  1.06f, .95f, .366f,  // Mutiple
+  0,    0,    0,      // target
+  0.f,  0.f,  0.f,    // speed XYZ
+  0.f,  0.f,  0.f,    // set speed
+  6.f,  6.f,  5.f,    // kp
+  1.f,  1.f,  1.f,    // kd
+  0.f,  0.f,  0.f,    // curE
+  0.f,  0.f,  0.f     // prvE
 };
 
 MOTOR_InstType motor[4] = {
@@ -71,7 +88,7 @@ MOTOR_InstType motor[4] = {
     MTR1_CTR0_GPIO_Port, MTR1_CTR0_Pin, MTR1_CTR1_GPIO_Port, MTR1_CTR1_Pin,
     0, 0, 0, 0,            // lastUpdata, thisU, lastValue, thisV
     1, 0, 0, 0, 0, 0,      // intDir, dir, encRps, motorRps, speed, targetSpd
-    52.0, 30.0, 60.0 * PI, // ppr, sdr, perim
+    52.0, 30.0, 76.0 * PI, // ppr, sdr, perim
     0.8, 0.2, 0.08,        // kp, ki, kd
     0, 0, 0, 0, 0, 0       // prvE, curE, sumE, pidval atWork HaltCounter 
   }, {
@@ -80,7 +97,7 @@ MOTOR_InstType motor[4] = {
     MTR2_CTR0_GPIO_Port, MTR2_CTR0_Pin, MTR2_CTR1_GPIO_Port, MTR2_CTR1_Pin,
     0, 0, 0, 0, 
     0, 0, 0, 0, 0, 0,
-    52.0, 30.0, 60.0 * PI,
+    52.0, 30.0, 76.0 * PI,
     0.8, 0.2, 0.08,      
     0, 0, 0, 0, 0, 0
   }, {
@@ -89,7 +106,7 @@ MOTOR_InstType motor[4] = {
     MTR3_CTR0_GPIO_Port, MTR3_CTR0_Pin, MTR3_CTR1_GPIO_Port, MTR3_CTR1_Pin,
     0, 0, 0, 0, 
     1, 0, 0, 0, 0, 0,
-    52.0, 30.0, 60.0 * PI,
+    52.0, 30.0, 76.0 * PI,
     0.8, 0.2, 0.08,    
     0, 0, 0, 0, 0, 0
   }, {
@@ -98,7 +115,7 @@ MOTOR_InstType motor[4] = {
     MTR4_CTR0_GPIO_Port, MTR4_CTR0_Pin, MTR4_CTR1_GPIO_Port, MTR4_CTR1_Pin,
     0, 0, 0, 0, 
     0, 0, 0, 0, 0, 0,
-    52.0, 30.0, 60.0 * PI,
+    52.0, 30.0, 76.0 * PI,
     0.8, 0.2, 0.08,   
     0, 0, 0, 0, 0, 0
   }

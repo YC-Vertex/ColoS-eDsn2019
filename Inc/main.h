@@ -44,7 +44,10 @@ extern "C" {
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
-
+typedef struct {
+    int x;
+    int y;
+} XYPos;
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/

@@ -7,11 +7,6 @@
 typedef enum {NONE, START, PAUSE, END} Status;
 
 typedef struct {
-    uint16_t x;
-    uint16_t y;
-} XYPos;
-
-typedef struct {
   uint8_t * name;
   
   uint16_t time;
@@ -30,9 +25,10 @@ typedef struct {
   _Bool update[3];
 } EDC21Player_InstType;
 
-_Bool Decode(uint8_t * data, EDC21Global_InstType * gb,
-    EDC21Player_InstType * p1, EDC21Player_InstType * p2);
+// 上位机通讯相关
 void EDC21Handler(DMA_InstType * dma, EDC21Global_InstType * gb,
+    EDC21Player_InstType * p1, EDC21Player_InstType * p2);
+_Bool Decode(uint8_t * data, EDC21Global_InstType * gb,
     EDC21Player_InstType * p1, EDC21Player_InstType * p2);
 void EdcDispGlobalInfo(EDC21Global_InstType * g);
 void EdcDispPlayerInfo(EDC21Player_InstType * p);
