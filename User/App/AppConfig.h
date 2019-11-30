@@ -15,12 +15,13 @@
 
 extern const float speedEps;
 
-extern _Bool startFlag;
+extern _Bool enableMonitor;
 extern _Bool carFlag;
 extern _Bool navFlag;
 extern _Bool mockLaby;
 extern _Bool runMap;
 extern _Bool forceUpdate;
+extern uint8_t task;
 
 extern DMA_InstType debug;
 extern DMA_InstType comm;

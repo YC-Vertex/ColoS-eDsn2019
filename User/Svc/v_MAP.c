@@ -33,12 +33,7 @@ void InitMap(EDC21Map_InstType * eMap) {
   }
   
   #ifdef __DEBUG_1__
-  for (int i = 0; i < 6; ++i) {
-    for (int j = 0; j < 6; ++j) {
-      printf("%x ", eMap->map[i*6+j]);
-    }
-    printf("\r\n");
-  }
+  // EdcDispMapInfo(eMap);
   #endif
 }
 
@@ -65,6 +60,7 @@ _Bool MapHandler(EDC21Map_InstType * eMap) {
     }
     else {
       InitMap(eMap);
+      forceUpdate = 1;
       return 0;
     }
   }
@@ -206,12 +202,14 @@ int GetPointIndex(XYPos * labyRelPos) {
 
 void setTargetByPoint(EDC21Map_InstType * eMap, int point) {
   eMap->tarPoint = point;
+  forceUpdate = 1;
 }
 void setTargetByPos(EDC21Map_InstType * eMap, XYPos pos) {
   eMap->target = pos;
   pos.x -= eMap->origin.x;
   pos.y -= eMap->origin.y;
   eMap->tarPoint = GetPointIndex(&pos);
+  forceUpdate = 1;
 }
 
 void EdcDispObstacleInfo(EDC21Map_InstType * eMap) {
@@ -220,6 +218,16 @@ void EdcDispObstacleInfo(EDC21Map_InstType * eMap) {
     printf("%d ", eMap->obs[i]);
   }
   printf("\r\n");
+}
+
+void EdcDispMapInfo(EDC21Map_InstType * eMap) {
+  printf("Map:\r\n");
+  for (int i = 0; i < 6; ++i) {
+    for (int j = 0; j < 6; ++j) {
+      printf("%x ", eMap->map[i*6+j]);
+    }
+    printf("\r\n");
+  }
 }
 
 void EdcDispRouteInfo(EDC21Map_InstType * eMap) {
@@ -369,22 +377,22 @@ _Bool Route(EDC21Map_InstType * eMap) //"+1 Job" Finished Here
   int curP = eMap->curPoint;
   int tarP = eMap->tarPoint;
   if (curP == tarP || curP == -1 || tarP == -1) {
+    if (curP == tarP) eMap->done = 1;
     eMap->length = 0;
     eMap->route[0] = -1;
     return 1;
   }
+  eMap->done = 0;
   Init();
   
-    BuildMap(eMap->map);
-    if(BIBFS(curP+1, tarP+1)){
-        GetRoute(eMap->route, result[1], result[2]);
-        eMap->length = result[0];
-        return 1;
-    }else{
-        eMap->route[0] = -1;
-        eMap->length = 0;
-        return 0;
-    }
-    
-    
+  BuildMap(eMap->map);
+  if (BIBFS(curP + 1, tarP + 1)) {
+    GetRoute(eMap->route, result[1], result[2]);
+    eMap->length = result[0];
+    return 1;
+  } else {
+    eMap->route[0] = -1;
+    eMap->length = 0;
+    return 0;
+  }
 }

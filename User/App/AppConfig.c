@@ -1,11 +1,12 @@
 #include "AppConfig.h"
 
-_Bool startFlag = 0; // 主进程锁，默认不开始
-_Bool carFlag = 0;   // 0 - A, 1 - B
-_Bool navFlag = 0;   // 自动调速锁，无默认值
-_Bool mockLaby = 0;  // 模拟迷宫
+_Bool enableMonitor = 0;  // 是否启用上位机数据，默认为不启用
+_Bool carFlag = 0;        // 0 - A, 1 - B
+_Bool navFlag = 0;        // 自动调速锁，无默认值
+_Bool mockLaby = 0;       // 模拟迷宫
 _Bool runMap = 0;
 _Bool forceUpdate = 0;
+uint8_t task = 0;         // 0 - 不启动，1 - 下方迷宫，2 - 上方迷宫
 
 uint8_t uart2RxBuf[256];
 uint8_t uart3RxBuf[256];
@@ -58,15 +59,17 @@ EDC21Player_InstType* ePlayerPointer;
 EDC21Map_InstType eMap = {
   "EDC map",
   
-  {0},            // map
-  {-1},           // route
-  -1,             // length
+  {0},      // map
+  {-1},     // route
+  -1,       // length
   
-  -1, {0, 0}, -1, // curPoint, tarPos, tarPoint
+  -1, {0, 0}, -1,       // curPoint, tarPos, tarPoint
   
-  {600, 600},       // origin of labyrinth
+  {600, 600},           // origin of labyrinth
   {110, 110, 80, 80},   // us sensor offset
-  {0, 0, 0, 0}    // obstacles
+  {0, 0, 0, 0},         // obstacles
+  
+  0         // done
 };
 
 Position_InstType Vehicle = {

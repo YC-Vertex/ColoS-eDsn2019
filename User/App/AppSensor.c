@@ -100,7 +100,8 @@ void MapTaskDaemon(void const * argument) {
     
     XYPos car = {Vehicle.deltaX, Vehicle.deltaY};
     _Bool updateFlag = 0;
-    if (lastTarget != eMap.tarPoint) updateFlag = 1;
+    if (lastTarget != eMap.tarPoint)
+      updateFlag = 1;
     lastTarget = eMap.tarPoint;
     if (UpdatePos(&eMap, car))
       updateFlag = 1;
@@ -135,14 +136,12 @@ void MapTaskDaemon(void const * argument) {
     }
     */
     
-    if (forceUpdate || (updateFlag && (/*ePlayerPointer->isInLaby || */mockLaby))) {
+    if (forceUpdate || (updateFlag && ((enableMonitor && ePlayerPointer->isInLaby) || mockLaby))) {
+      forceUpdate = 0;
       if (MapHandler(&eMap)) {
         runMap = 1;
         osDelay(53);
-        WaitTillFinishByLoc(60.f, 6.f);
-        forceUpdate = 0;
-      } else {
-        forceUpdate = 0;
+        WaitTillFinishByLoc(40.f, 4.f);
       }
     } else {
       runMap = 0;

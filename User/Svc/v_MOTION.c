@@ -61,7 +61,7 @@ void setSpeed(MOTOR_InstType* mt, Position_InstType* pInst, float xSpeed, float 
   ySpeed /= pInst->yMultiples;
   zSpeed /= pInst->zMultiples;
   float max = ABS(xSpeed) + ABS(ySpeed) + ABS(zSpeed), d = 1.f;
-  if (max > 400) d = 400 / max;
+  if (max > 500) d = 500 / max;
   MotorSetSpeed(mt + 0, d * (xSpeed + ySpeed + zSpeed));
   MotorSetSpeed(mt + 1, d * (xSpeed - ySpeed - zSpeed));
   MotorSetSpeed(mt + 2, d * (xSpeed - ySpeed + zSpeed));
@@ -95,10 +95,14 @@ void speedHandler(Position_InstType* pInst, MOTOR_InstType* mt, JY61_InstType* g
   pInst->zSpeed = (mt[0].speed - mt[1].speed + mt[2].speed - mt[3].speed) *
                   pInst->zMultiples / 4;
   
-  double c = cos(1.*D2R *pInst->deltaZ);
-  double s = sin(1.*D2R *pInst->deltaZ);
+  double c = cos(1. * D2R * pInst->deltaZ);
+  double s = sin(1. * D2R * pInst->deltaZ);
   pInst->deltaX += (pInst->xSpeed * c - pInst->ySpeed * s) * dt;
   pInst->deltaY += (pInst->ySpeed * c + pInst->xSpeed * s) * dt;
+  if (enableMonitor && !ePlayerPointer->isInLaby && fabs(pInst->deltaX - ePlayerPointer->pos.x) < 100.f)
+    pInst->deltaX += (ePlayerPointer->pos.x - pInst->deltaX) / 5;
+  if (enableMonitor && !ePlayerPointer->isInLaby && fabs(pInst->deltaY - ePlayerPointer->pos.y) < 100.f)
+    pInst->deltaY += (ePlayerPointer->pos.y - pInst->deltaY) / 5;
   
   pInst->deltaZ += pInst->zSpeed * dt;
   // 如果要调参，把下面代码注释掉（取消陀螺仪校准）

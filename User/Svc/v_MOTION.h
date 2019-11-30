@@ -28,6 +28,7 @@ extern EDC21Player_InstType ePlayer[2];
 extern EDC21Player_InstType* ePlayerPointer;
 extern _Bool carFlag;
 extern _Bool navFlag;
+extern _Bool enableMonitor;
 
 void speedHandler(Position_InstType* pInst, MOTOR_InstType* mt, JY61_InstType* gyro, float dt);
 void moveHandler(Position_InstType* pInst, MOTOR_InstType* mt, float dt);

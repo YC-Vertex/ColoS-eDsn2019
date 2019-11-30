@@ -29,6 +29,7 @@ void DebugTaskDaemon(void const * argument) {
             #endif
             
             if (rxBuf[0] == 'q') { // run quest
+              /*
               if (rxBuf[1] == '1') {
                 NEout();
               } else if (rxBuf[1] == '2') {
@@ -61,6 +62,8 @@ void DebugTaskDaemon(void const * argument) {
                 setTarget(&Vehicle, 240, 2000, -90);
                 WaitTillFinishByLoc(20.f, 3.f);
               }
+              */
+              task = rxBuf[1] - '0';
             }
             
             else if (rxBuf[0] == 'x') { // setTarget
@@ -88,16 +91,16 @@ void DebugTaskDaemon(void const * argument) {
               setCircle(motor, &Vehicle, theta, r, time);
             }
             
-            else if (rxBuf[0] == 'c') { // set car and start
+            else if (rxBuf[0] == 'c') { // set car and start, the only way to enter match mode
               char car;
               float angle;
               sscanf(rxBuf, "car%c%f;", &car, &angle);
               if (fabs(angle - 0.f) < 0.2)
                 angle = 0.01f;
               if (LocInitByCar(car, angle))
-                startFlag = 1;
+                enableMonitor = 1;
               else
-                startFlag = 0;
+                enableMonitor = 0;
               navFlag = 0;
             }
             
@@ -109,9 +112,7 @@ void DebugTaskDaemon(void const * argument) {
               if (t == 3) {
                 XYPos pos = {x, y};
                 LocInitByPos(pos, angle);
-                startFlag = 1;
                 navFlag = 0;
-                InitMap(&eMap);
               }
             }
             
@@ -132,16 +133,51 @@ void DebugTaskDaemon(void const * argument) {
               }
               mockLaby = 1;
               forceUpdate = 1;
-              InitMap(&eMap);
             }
             
-            else if (rxBuf[0] == '>') {
+            else if (rxBuf[0] == '>') { // virtual path finding test
               int cur, tar;
               int t = sscanf(rxBuf, ">%d>%d;", &cur, &tar);
               eMap.curPoint = cur;
               eMap.tarPoint = tar;
               MapHandler(&eMap);
               EdcDispRouteInfo(&eMap);
+            }
+            
+            else if (rxBuf[0] == 'h') { // obstacle debug mode
+              int num, index, col, row;
+              int mapIndex[2];
+              char msg1[64], msg2[64];
+              char * msg = msg1;
+              char * buf = msg2;
+              char * temp;
+              
+              sscanf(rxBuf, "h%d,%s;", &num, msg);
+              if (num == 0) InitMap(&eMap);
+              for (int i = 0; i < num; ++i) {
+                sscanf(msg, "%d,%s;", &index, buf);
+                temp = msg;
+                msg = buf;
+                buf = temp;
+                
+                if (index < 30) { // verticle (y dir)
+                  col = index % 5;
+                  row = index / 5;
+                  mapIndex[0] = row * 6 + col;
+                  mapIndex[1] = mapIndex[0] + 1;
+                  eMap.map[mapIndex[0]] &= 0x0e;
+                  eMap.map[mapIndex[1]] &= 0x0d;
+                } else { // horizontal (x dir)
+                  index -= 30;
+                  col = index % 6;
+                  row = index / 6;
+                  mapIndex[0] = index;
+                  mapIndex[1] = index + 6;
+                  eMap.map[mapIndex[0]] &= 0x0b;
+                  eMap.map[mapIndex[1]] &= 0x07;
+                }
+                  printf(">> %d %d\r\n", mapIndex[0], mapIndex[1]);
+              }
             }
             
             else if (rxBuf[0] == 'm') { // set multiple
@@ -179,20 +215,17 @@ void MonitorTaskDaemon(void const * argument) {
   
   while (1) {
     EDC21Handler(&monitor, &eGlobal, ePlayer + 0, ePlayer + 1);
-    // 如果无上位机调试请把下面这行注释掉
-    /*
-    if (eGlobal.status != START) {
+    if (enableMonitor && eGlobal.status != START) {
       navFlag = 0;
       setSpeed(motor, &Vehicle, 0, 0, 0);
     }
-    */
     #ifdef __DEBUG_1__
     if (count++ >= 40) {
       EdcDispGlobalInfo(&eGlobal);
       EdcDispPlayerInfo(ePlayer + 0);
       EdcDispPlayerInfo(ePlayer + 1);
-      // EdcDispObstacleInfo(&eMap);
       EdcDispRouteInfo(&eMap);
+      EdcDispMapInfo(&eMap);
       count = 0;
     }
     #endif
