@@ -115,31 +115,31 @@ void MX_FREERTOS_Init(void) {
 
   /* Create the thread(s) */
   /* definition and creation of MainTask */
-  osThreadDef(MainTask, MainTaskDaemon, osPriorityNormal, 0, 128);
+  osThreadDef(MainTask, MainTaskDaemon, osPriorityNormal, 0, 256);
   MainTaskHandle = osThreadCreate(osThread(MainTask), NULL);
 
   /* definition and creation of SensorTask */
-  osThreadDef(SensorTask, SensorTaskDaemon, osPriorityAboveNormal, 0, 128);
+  osThreadDef(SensorTask, SensorTaskDaemon, osPriorityAboveNormal, 0, 256);
   SensorTaskHandle = osThreadCreate(osThread(SensorTask), NULL);
 
   /* definition and creation of EncoderTask */
-  osThreadDef(EncoderTask, EncoderTaskDaemon, osPriorityRealtime, 0, 128);
+  osThreadDef(EncoderTask, EncoderTaskDaemon, osPriorityRealtime, 0, 256);
   EncoderTaskHandle = osThreadCreate(osThread(EncoderTask), NULL);
 
   /* definition and creation of LocateTask */
-  osThreadDef(LocateTask, LocateTaskDaemon, osPriorityRealtime, 0, 128);
+  osThreadDef(LocateTask, LocateTaskDaemon, osPriorityRealtime, 0, 256);
   LocateTaskHandle = osThreadCreate(osThread(LocateTask), NULL);
 
   /* definition and creation of MonitorTask */
-  osThreadDef(MonitorTask, MonitorTaskDaemon, osPriorityAboveNormal, 0, 128);
+  osThreadDef(MonitorTask, MonitorTaskDaemon, osPriorityAboveNormal, 0, 256);
   MonitorTaskHandle = osThreadCreate(osThread(MonitorTask), NULL);
 
   /* definition and creation of DebugTask */
-  osThreadDef(DebugTask, DebugTaskDaemon, osPriorityNormal, 0, 128);
+  osThreadDef(DebugTask, DebugTaskDaemon, osPriorityNormal, 0, 512);
   DebugTaskHandle = osThreadCreate(osThread(DebugTask), NULL);
 
   /* definition and creation of MapTask */
-  osThreadDef(MapTask, MapTaskDaemon, osPriorityNormal, 0, 128);
+  osThreadDef(MapTask, MapTaskDaemon, osPriorityNormal, 0, 256);
   MapTaskHandle = osThreadCreate(osThread(MapTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */

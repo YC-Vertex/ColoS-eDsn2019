@@ -8,7 +8,7 @@ _Bool LocInitByCar(char car, float angle) {
   else if (car == 'B' || car == 'b') carFlag = 1;
   else return 0;
   
-  ePlayerPointer = &ePlayer[car];
+  ePlayerPointer = &ePlayer[carFlag];
   Vehicle.deltaX = ePlayerPointer->pos.x;
   Vehicle.deltaY = ePlayerPointer->pos.y;
   Vehicle.deltaZ = angle;

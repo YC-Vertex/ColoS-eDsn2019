@@ -3,10 +3,11 @@
 _Bool enableMonitor = 0;  // 是否启用上位机数据，默认为不启用
 _Bool carFlag = 0;        // 0 - A, 1 - B
 _Bool navFlag = 0;        // 自动调速锁，无默认值
-_Bool mockLaby = 0;       // 模拟迷宫
+_Bool mockLaby = 1;       // 模拟迷宫
 _Bool runMap = 0;
 _Bool forceUpdate = 0;
 uint8_t task = 0;         // 0 - 不启动，1 - 下方迷宫，2 - 上方迷宫
+_Bool debugFlag = 0;      // 0 - Location, 1 - Monitor
 
 uint8_t uart2RxBuf[256];
 uint8_t uart3RxBuf[256];
@@ -65,7 +66,7 @@ EDC21Map_InstType eMap = {
   
   -1, {0, 0}, -1,       // curPoint, tarPos, tarPoint
   
-  {600, 600},           // origin of labyrinth
+  {550, 550},           // origin of labyrinth
   {110, 110, 80, 80},   // us sensor offset
   {0, 0, 0, 0},         // obstacles
   

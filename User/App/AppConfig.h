@@ -22,6 +22,7 @@ extern _Bool mockLaby;
 extern _Bool runMap;
 extern _Bool forceUpdate;
 extern uint8_t task;
+extern _Bool debugFlag;
 
 extern DMA_InstType debug;
 extern DMA_InstType comm;

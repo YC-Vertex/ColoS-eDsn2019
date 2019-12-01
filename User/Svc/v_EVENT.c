@@ -5,7 +5,7 @@ void SWout(){
   WaitTillFinishByLoc(30.f, 5.f);
   setTarget(&Vehicle, 450, 2350, -180.f);
   WaitTillFinishByLoc(30.f, 5.f);
-  setCircle(motor, &Vehicle, 90, 250, 2);
+  setCircle(motor, &Vehicle, 90, 250, 1.5);
   
   // old version
   /*
@@ -24,7 +24,7 @@ void NEout(){
   WaitTillFinishByLoc(30.f, 5.f);
   setTarget(&Vehicle, 2350, 450, -90.f);
   WaitTillFinishByLoc(30.f, 5.f);
-  setCircle(motor, &Vehicle, 90, -250, 2);
+  setCircle(motor, &Vehicle, 90, -250, 1.5);
   
   // old version
   /*

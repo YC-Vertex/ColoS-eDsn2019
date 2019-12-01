@@ -202,6 +202,7 @@ int GetPointIndex(XYPos * labyRelPos) {
 
 void setTargetByPoint(EDC21Map_InstType * eMap, int point) {
   eMap->tarPoint = point;
+  eMap->done = 0;
   forceUpdate = 1;
 }
 void setTargetByPos(EDC21Map_InstType * eMap, XYPos pos) {
@@ -209,6 +210,7 @@ void setTargetByPos(EDC21Map_InstType * eMap, XYPos pos) {
   pos.x -= eMap->origin.x;
   pos.y -= eMap->origin.y;
   eMap->tarPoint = GetPointIndex(&pos);
+  eMap->done = 0;
   forceUpdate = 1;
 }
 

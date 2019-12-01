@@ -17,7 +17,7 @@ void MainTaskDaemon(void const * argument) {
     
     if (task == 1) { // task one: no laby SW task
       SWout();
-      ATTRACT;
+      // ATTRACT;
       ToCollection();
       setTarget(&Vehicle, 200, 2100, -90.f);
       WaitTillFinishByLoc(30.f, 3.f);
@@ -27,7 +27,7 @@ void MainTaskDaemon(void const * argument) {
       ToSWgarage();
     } else if (task == 2) { // task two: laby SW task
       SWout();
-      ATTRACT;
+      // ATTRACT;
       ToCollection();
       ToLeftEntry(1);
       
@@ -45,12 +45,12 @@ void MainTaskDaemon(void const * argument) {
       ToP3();
       ToRightEntry(1);
       
-      setTarget(&Vehicle, 2050, 1750, 180.f);
+      setTarget(&Vehicle, 2050, 1750, -180.f);
       WaitTillFinishByLoc(20.f, 2.f);
       
       _Bool flag = 0;
       while (1) {
-        setTargetByPos(&eMap, eGlobal.person[(int)flag + 1]);
+        setTargetByPos(&eMap, eGlobal.person[flag]);
         while (!eMap.done) osDelay(200);
         flag = !flag;
       }

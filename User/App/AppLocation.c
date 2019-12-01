@@ -13,11 +13,14 @@ void LocateTaskDaemon(void const * argument) {
       if (eMap.length == 0) {
         printf(">> Arrive: %d\r\n", eMap.curPoint);
       } else {
+        int point = eMap.route[0];
+        if (eMap.curPoint == point && eMap.length >= 2)
+          point = eMap.route[1];
         XYPos target = {
-          eMap.origin.x + (eMap.route[0] % 6) * 300,
-          eMap.origin.y + (eMap.route[0] / 6) * 300
+          eMap.origin.x + (point % 6) * 300,
+          eMap.origin.y + (point / 6) * 300
         };
-        printf(">> Target: %d (%d %d)\r\n", eMap.route[0], target.x, target.y);
+        printf(">> Target: real%d %d (%d %d)\r\n", point, eMap.route[0], target.x, target.y);
         defaultSetTarget(target.x, target.y, 0);
       }
       runMap = 0;
@@ -31,11 +34,14 @@ void LocateTaskDaemon(void const * argument) {
     
     #ifdef __DEBUG_1__
     if (count++ >= 80) {
-      printf("Position: %6.3f %6.3f %6.3f ", Vehicle.deltaX, Vehicle.deltaY, Vehicle.deltaZ);
-      printf("%6.3f %6.3f %6.3f ", Vehicle.xSpeed, Vehicle.ySpeed, Vehicle.zSpeed);
-      printf("%6.3f %6.3f %6.3f\r\n", Vehicle.xSetSpeed, Vehicle.ySetSpeed, Vehicle.zSetSpeed);
-      printf("jy: %6.3f %6.3f %6.3f\r\n", jy.pitch, jy.row, jy.yall);
-      count = 0;
+      if (!debugFlag) {
+        printf("Position: %6.3f %6.3f %6.3f\r\n", Vehicle.deltaX, Vehicle.deltaY, Vehicle.deltaZ);
+        // printf("%6.3f %6.3f %6.3f ", Vehicle.xSpeed, Vehicle.ySpeed, Vehicle.zSpeed);
+        // printf("%6.3f %6.3f %6.3f\r\n", Vehicle.xSetSpeed, Vehicle.ySetSpeed, Vehicle.zSetSpeed);
+        printf("JY: %6.3f %6.3f %6.3f\r\n", jy.pitch, jy.row, jy.yall);
+        count = 0;
+        debugFlag = 1;
+      }
     }
     #endif
     

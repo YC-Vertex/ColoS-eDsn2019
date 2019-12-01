@@ -147,10 +147,11 @@ void DebugTaskDaemon(void const * argument) {
             else if (rxBuf[0] == 'h') { // obstacle debug mode
               int num, index, col, row;
               int mapIndex[2];
+              
               char msg1[64], msg2[64];
               char * msg = msg1;
               char * buf = msg2;
-              char * temp;
+              char * temp = NULL;
               
               sscanf(rxBuf, "h%d,%s;", &num, msg);
               if (num == 0) InitMap(&eMap);
@@ -159,7 +160,7 @@ void DebugTaskDaemon(void const * argument) {
                 temp = msg;
                 msg = buf;
                 buf = temp;
-                
+              
                 if (index < 30) { // verticle (y dir)
                   col = index % 5;
                   row = index / 5;
@@ -176,9 +177,30 @@ void DebugTaskDaemon(void const * argument) {
                   eMap.map[mapIndex[0]] &= 0x0b;
                   eMap.map[mapIndex[1]] &= 0x07;
                 }
-                  printf(">> %d %d\r\n", mapIndex[0], mapIndex[1]);
+                printf(">> %d %d\r\n", mapIndex[0], mapIndex[1]);
               }
+              /*
+              sscanf(rxBuf, "h%d", &index);
+              if (index < 30) { // verticle (y dir)
+                  col = index % 5;
+                  row = index / 5;
+                  mapIndex[0] = row * 6 + col;
+                  mapIndex[1] = mapIndex[0] + 1;
+                  eMap.map[mapIndex[0]] &= 0x0e;
+                  eMap.map[mapIndex[1]] &= 0x0d;
+                } else { // horizontal (x dir)
+                  index -= 30;
+                  col = index % 6;
+                  row = index / 6;
+                  mapIndex[0] = index;
+                  mapIndex[1] = index + 6;
+                  eMap.map[mapIndex[0]] &= 0x0b;
+                  eMap.map[mapIndex[1]] &= 0x07;
+                }
+                printf(">> %d %d\r\n", mapIndex[0], mapIndex[1]);
+                */
             }
+        
             
             else if (rxBuf[0] == 'm') { // set multiple
               float a, b, c;
@@ -210,23 +232,35 @@ void DebugTaskDaemon(void const * argument) {
 
 void MonitorTaskDaemon(void const * argument) {
   uint8_t count = 0;
+  _Bool recovery = 0;
   
   osDelay(1000);
   
   while (1) {
     EDC21Handler(&monitor, &eGlobal, ePlayer + 0, ePlayer + 1);
     if (enableMonitor && eGlobal.status != START) {
+      if (navFlag) recovery = 1;
       navFlag = 0;
       setSpeed(motor, &Vehicle, 0, 0, 0);
     }
+    if (enableMonitor && eGlobal.status == START) {
+      if (recovery) {
+        navFlag = 1;
+        recovery = 0;
+      }
+    }
     #ifdef __DEBUG_1__
     if (count++ >= 40) {
-      EdcDispGlobalInfo(&eGlobal);
-      EdcDispPlayerInfo(ePlayer + 0);
-      EdcDispPlayerInfo(ePlayer + 1);
-      EdcDispRouteInfo(&eMap);
-      EdcDispMapInfo(&eMap);
-      count = 0;
+      if (debugFlag) {
+        EdcDispGlobalInfo(&eGlobal);
+        EdcDispPlayerInfo(ePlayer + 0);
+        EdcDispPlayerInfo(ePlayer + 1);
+        EdcDispRouteInfo(&eMap);
+        EdcDispMapInfo(&eMap);
+        printf("\r\n\r\n");
+        count = 0;
+        debugFlag = 0;
+      }
     }
     #endif
     
